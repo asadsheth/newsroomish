@@ -193,6 +193,7 @@ console.log('?cardstream: in progress');
 console.log('?multiposters: in progress');
 console.log('&noreplies: hides replies');
 console.log('&threadsonly: hides items with no replies');
+console.log('&autoreload: periodically run newvibesbot.php');
 console.log('-------------------');
 
 var ALL_VIBES = [];
@@ -1011,8 +1012,8 @@ var reload_backend = function() {
 }
 // fire the auto-reloader?
 if(
-	window.location.href.indexOf('cardstream') > -1 
-	&& window.location.href.indexOf('autoreload') > -1) {
+	window.location.href.indexOf('autoreload') > -1
+) {
 	console.log('starting autoreloads');
 	setTimeout(reload_backend, RELOAD_FREQ * 60000);
 }
