@@ -804,6 +804,7 @@ function jsonp_parse_amalgam(obj) {
 			breaking_card.style.textShadow = '1px 1px 10px black';	
 			breaking_card.style.background = 'linear-gradient(135deg, red, darkorange)';
 			breaking_card.innerHTML = obj[i].heading + '<br/>' + obj[i].msg + '<div style="height: 50px; width: 100%; position: absolute; bottom: 0; left: 0; background: linear-gradient(rgba(255,255,255,0), white)">&nbsp;</div>';
+			// for now, only append when explicitly requested
 			if(window.location.href.indexOf('breaking') > -1) document.body.appendChild(breaking_card);
 		}
 		else if(
