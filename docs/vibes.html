@@ -798,12 +798,13 @@ function jsonp_parse_amalgam(obj) {
 			// it's breaking news!
 			var	breaking_card = document.createElement('div');
 			breaking_card.style.fontSize = '36px';
-			breaking_card.style.padding = '30px 10px';
+			breaking_card.style.position = 'relative';
+			breaking_card.style.padding = '30px 10px 50px 10px';
 			breaking_card.style.color = 'white';
 			breaking_card.style.textShadow = '1px 1px 10px black';	
 			breaking_card.style.background = 'linear-gradient(135deg, red, darkorange)';
-			breaking_card.innerHTML = obj[i].title + '<br/>' + obj[i].msg;
-			// document.body.appendChild(breaking_card);
+			breaking_card.innerHTML = obj[i].heading + '<br/>' + obj[i].msg + '<div style="height: 50px; width: 100%; position: absolute; bottom: 0; left: 0; background: linear-gradient(rgba(255,255,255,0), white)">&nbsp;</div>';
+			document.body.appendChild(breaking_card);
 		}
 		else if(
 			is_ntk
