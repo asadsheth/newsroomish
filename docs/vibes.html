@@ -247,6 +247,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		scr.src = 'caches/c_allvibes.jsonp';
 		document.head.appendChild(scr);
 	}
+	// special prototype for card streams?
+	else if(window.location.href.indexOf('cardstream') > -1) {
+		document.body.innerHTML = '';
+
+		console.log('config: cardstream');
+		var scr = document.createElement('script');
+		scr.src = 'caches/amalgam.jsonp?rand=' + Math.random();
+		document.head.appendChild(scr);
+	}	
 	else {
 		// get vibes from cached list
 		load_vibe_list();
@@ -545,9 +554,9 @@ function create_vibe_card(obj) {
 
 			// hide the leftovers until they hit read more
 			if(
-				(is_ntk && j > 2)
+				(is_ntk && j > 2) // show 3 items in NTK
 				|| 
-				(!is_ntk && j > 3)
+				(!is_ntk && j > 3) // show 4 items in other cards
 			) {
 				vibe_story.style.display = 'none';
 			}
@@ -765,6 +774,7 @@ function jsonp_parse_amalgam(obj) {
 	console.log('handler: amalgam cardstream');
 	console.log(obj);
 	AMALGAM = obj;
+	ALL_VIBES = AMALGAM;
 
 	// get followed vibes
 	var followed_vibes = FOLLOWS;
@@ -838,10 +848,12 @@ function create_suggested_vibes_card(followed_vibes) {
 	var attempted_selections = 0;
 	var merchandised_vibes_list = {};
 
-	for(var i = 0; (i < ALL_VIBES.length) && (merchandised_vibes < 6) && attempted_selections < 100; i++)	{
+	// show all vibes. note that default sort is in order of most recently updated
+	for(var i = 0; (i < ALL_VIBES.length) /*&& (merchandised_vibes < 6)*/ && attempted_selections < 1000; i++)	{
 		attempted_selections++;
 
-		var random_index = Math.floor(Math.random() * ALL_VIBES.length);
+		// var random_index = Math.floor(Math.random() * ALL_VIBES.length);
+		var random_index = i;
 
 		// check if i already followed it
 		if(followed_vibes[ALL_VIBES[random_index].id]) continue;
@@ -866,6 +878,7 @@ function create_suggested_vibes_card(followed_vibes) {
 		var theme_color = COLORS[vibe_id.charCodeAt(1) % COLORS.length]
 		
 		var vibe_card = document.createElement('div');
+		vibe_card.className = 'merchandised_vibe';
 		vibe_card.style.width = '50%';
 		vibe_card.style.verticalAlign = 'top';
 		vibe_card.style.display = 'inline-block';
@@ -885,15 +898,56 @@ function create_suggested_vibes_card(followed_vibes) {
 		}
 		
 		suggested_vibes.appendChild(vibe_card);
-		merchandised_vibes++;
+
+		// hide more than 6
+		if(merchandised_vibes > 5) {
+			vibe_card.style.display = 'none';
+		}
+		else {
+			merchandised_vibes++;
+		}
+
 	}
 
+	// empty message
 	if(merchandised_vibes == 0)	{
 		var empty_message = document.createElement('div');
 		empty_message.innerHTML = 'You\'ve exhausted our universe!';
 		empty_message.style.margin = '20px 0'
 		suggested_vibes.appendChild(empty_message)
 	}
+
+	// show more?
+	var vibe_card_extender = document.createElement('div');
+	vibe_card_extender.style.textAlign = 'left';
+	vibe_card_extender.style.padding = '0 10px';
+
+	
+	var vibe_card_more_button = document.createElement('button');
+	vibe_card_more_button.style.border = 'none';
+	vibe_card_more_button.style.background = 'none';
+	vibe_card_more_button.style.color = '#666';
+	vibe_card_more_button.style.padding = '10px 0px';
+	vibe_card_more_button.innerHTML = merchandised_vibes == 6 ? 'Show more' : 'That\'s all for now';
+	// handler for when people ask for more
+	if(merchandised_vibes > 3) {
+		vibe_card_more_button.onclick = function() {
+			var vibe_card = this.parentNode.parentNode;
+
+			// unhide all the hidden stories
+			for(var i = 0; i < vibe_card.childNodes.length; i++) {
+				if(vibe_card.childNodes[i].className == 'merchandised_vibe') {
+					vibe_card.childNodes[i].style.display = 'inline-block';
+				}
+			}
+
+			// hide the read more thinger
+			this.parentNode.style.display = 'none';
+		}
+	}
+	vibe_card_extender.appendChild(vibe_card_more_button);
+
+	suggested_vibes.appendChild(vibe_card_extender);	
 
 	return suggested_vibes;	
 }
@@ -923,16 +977,7 @@ function jsonp_parse_vibes(obj)	{
 	// store it in the global
 	ALL_VIBES = obj;
 
-	// special prototype for card streams?
-	if(window.location.href.indexOf('cardstream') > -1) {
-		document.body.innerHTML = '';
-
-		console.log('config: cardstream');
-		var scr = document.createElement('script');
-		scr.src = 'caches/amalgam.jsonp?rand=' + Math.random();
-		document.head.appendChild(scr);
-	}
-	else if(window.location.href.indexOf('multiposters') > -1)	{
+	if(window.location.href.indexOf('multiposters') > -1)	{
 		document.body.innerHTML = '';
 
 		console.log('config: multiposter evaluation!');
