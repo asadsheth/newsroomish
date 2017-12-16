@@ -467,6 +467,7 @@ function create_vibe_card(obj) {
 			vibe_story.style.position = 'relative';
 			// vibe_story.style.boxShadow = has_comment ? '0 0 3px 0px rgba(0,0,0,0.5) inset' : '';		
 			vibe_story.url = post_meta.post_url;
+			// console.log(post_meta.post_id.substring(0, 38) + '_c-' + post_meta.context_meta.context_id);
 			vibe_story.onclick = function() {
 				window.open(this.url)
 			}
