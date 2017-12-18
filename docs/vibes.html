@@ -466,9 +466,16 @@ function create_vibe_card(obj) {
 			vibe_story.style.background = has_comment ? '#f9f9f9' : '';
 			vibe_story.style.position = 'relative';
 			// vibe_story.style.boxShadow = has_comment ? '0 0 3px 0px rgba(0,0,0,0.5) inset' : '';		
+
 			// what url to go to when clicked?
-			// vibe_story.url = post_meta.post_url; // post url
-			vibe_story.url = 'http://www.yahoo.com/newsroom/vibes/newsroomish/' + post_meta.post_id.substring(0, 38) + '_c-' + post_meta.post_id.substring(80, 116) + post_meta.post_id.substring(77, 116); // mega-based post url (always uses web comments)
+			if(window.location.href.indexOf('useweblinks') > -1) {
+				vibe_story.url = post_meta.content_url;
+			}
+			else {
+				// vibe_story.url = post_meta.post_url; // post url
+				vibe_story.url = 'http://www.yahoo.com/newsroom/vibes/newsroomish/' + post_meta.post_id.substring(0, 38) + '_c-' + post_meta.post_id.substring(80, 116) + post_meta.post_id.substring(77, 116); // mega-based post url (always uses web comments)
+			}
+
 			vibe_story.onclick = function() {
 				window.open(this.url)
 			}
@@ -499,7 +506,7 @@ function create_vibe_card(obj) {
 			var vibe_story_timestamp = document.createElement('div');
 			vibe_story_timestamp.style.display = 'inline-block'
 			vibe_story_timestamp.style.fontSize = '10px'
-			vibe_story_timestamp.innerHTML = '&nbsp; &bull; ' + (post_meta.content_relative_time == 0 ? ('<font style="color: red">new</font>') : (post_meta.content_relative_time > 23) ? (Math.floor(post_meta.content_relative_time / 24) + 'd') : (post_meta.content_relative_time + 'h'));
+			vibe_story_timestamp.innerHTML = '&nbsp; &bull; ' + (post_meta.content_relative_time == 0 ? ('<font style="color: red">new</font>') : (post_meta.content_relative_time > 23) ? (Math.floor(post_meta.content_relative_time / 24) + 'd') : (post_meta.content_relative_time + 'h')) + (vibe_story.url.indexOf('yahoo.com') == -1 ? '&nbsp; &bull; &nbsp; &rarr;' : '');
 
 			var vibe_story_title = document.createElement('div');
 			vibe_story_title.style.fontSize = is_ntk ? '30px' : has_vertical_thumbnail ? (has_comment ? '14px' : '24px') : (has_comment ? '13px' : '15px');
