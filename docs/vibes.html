@@ -466,8 +466,9 @@ function create_vibe_card(obj) {
 			vibe_story.style.background = has_comment ? '#f9f9f9' : '';
 			vibe_story.style.position = 'relative';
 			// vibe_story.style.boxShadow = has_comment ? '0 0 3px 0px rgba(0,0,0,0.5) inset' : '';		
-			vibe_story.url = post_meta.post_url;
-			// console.log(post_meta.post_id.substring(0, 38) + '_c-' + post_meta.context_meta.context_id);
+			// what url to go to when clicked?
+			// vibe_story.url = post_meta.post_url; // post url
+			vibe_story.url = 'http://www.yahoo.com/newsroom/vibes/newsroomish/' + post_meta.post_id.substring(0, 38) + '_c-' + post_meta.post_id.substring(80, 116) + post_meta.post_id.substring(77, 116); // mega-based post url (always uses web comments)
 			vibe_story.onclick = function() {
 				window.open(this.url)
 			}
