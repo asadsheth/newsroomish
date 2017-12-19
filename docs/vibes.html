@@ -176,7 +176,22 @@ div.clear	{
 	overflow: hidden;
 	clear: both;
 }
+
+/* -------- newsroomish styles start here *---------/
+
+
+/* end newsroomish styles */
 	</style>
+	
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-111450274-1"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-111450274-1');
+	</script>
 
 </head>
 
@@ -199,7 +214,6 @@ console.log('&useweblinks: link to www articles instead of newsroom posts');
 console.log('-------------------');
 
 var ALL_VIBES = [];
-var GLOBALS = {};
 var AMALGAM = [];
 var FOLLOWS = JSON.parse(localStorage.getItem('myvibes')) || {};
 
@@ -237,10 +251,12 @@ var SECONDARY_COLORS = [
 ];
 
 document.addEventListener("DOMContentLoaded", function(event) {
+	// asked to clear out storage?
 	if(window.location.href.indexOf('clearlocalstorage') > -1)	{
 		localStorage.clear();
 	}
 
+	// looking at full comment list?
 	if(window.location.href.indexOf('allcomments') > -1)	{
 		document.body.innerHTML = '';
 
@@ -257,9 +273,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		var scr = document.createElement('script');
 		scr.src = 'caches/amalgam.jsonp?rand=' + Math.random();
 		document.head.appendChild(scr);
-	}	
+	}
 	else {
-		// get vibes from cached list
+		// just get the list of vibes we've got, we'll figure out what we're doing after
 		load_vibe_list();
 	}
 });
@@ -794,6 +810,12 @@ function jsonp_parse_amalgam(obj) {
 	// styles
 	document.body.style.background = '#fff';
 
+	// container for the main cardstream
+	var cardstream_main = document.createElement('div');
+	cardstream_main.style.position = 'relative';
+	cardstream_main.style.transitionDuration = '0.3s';
+	cardstream_main.id = 'cardstream_main';
+
 	// first paint mine + trending
 	for(var i = 0; i < obj.length; i++)	{
 		var vibe_id = obj[i].id;
@@ -824,16 +846,18 @@ function jsonp_parse_amalgam(obj) {
 			|| is_mega
 		)	{
 			// it's an NTK or a MEGASTREAM or a regular vibe
-			document.body.appendChild(create_vibe_card(obj[i]));
+			cardstream_main.appendChild(create_vibe_card(obj[i]));
 		}
 		else if(followed_vibes[vibe_id]) {
 			// it's a followed vibe
-			document.body.appendChild(create_vibe_card(obj[i]));
+			cardstream_main.appendChild(create_vibe_card(obj[i]));
 		}
 	}
 
 	// now paint the suggested vibes carousel
-	document.body.appendChild(create_suggested_vibes_card(followed_vibes));
+	cardstream_main.appendChild(create_suggested_vibes_card(followed_vibes));
+
+	document.body.appendChild(cardstream_main);
 }
 
 function create_suggested_vibes_card(followed_vibes) {
@@ -944,7 +968,7 @@ function create_suggested_vibes_card(followed_vibes) {
 	vibe_card_more_button.style.padding = '10px 0px';
 	vibe_card_more_button.innerHTML = merchandised_vibes == 6 ? 'Show more' : 'That\'s all for now';
 	// handler for when people ask for more
-	if(merchandised_vibes > 3) {
+	if(merchandised_vibes == 6) {
 		vibe_card_more_button.onclick = function() {
 			var vibe_card = this.parentNode.parentNode;
 
