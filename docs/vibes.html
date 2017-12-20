@@ -34,7 +34,7 @@
 * {
 	box-sizing: border-box;
 }
-html, body {
+html {
 	overflow-x: hidden;
 }
 body{
@@ -43,7 +43,6 @@ body{
 	background: #ddd;
 	font-family: Yahoo-Sans;
 	font-size: 15px;
-	max-width: 600px;
 }
 
 a {
@@ -177,8 +176,21 @@ div.clear	{
 	clear: both;
 }
 
-/* -------- newsroomish styles start here *---------/
-
+/* -------- newsroomish styles start here ---------*/
+.cardstream_comment_block::after {
+	content: "";
+	background: url(https://d30y9cdsu7xlg0.cloudfront.net/png/19279-200.png);
+	background-repeat: no-repeat;
+	background-size: 100px;
+	background-position: 0% 100%;
+	opacity: 0.1;
+	transform: rotate(180deg);
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;	
+}
 
 /* end newsroomish styles */
 	</style>
@@ -211,11 +223,11 @@ console.log('&threadsonly: hides items with no replies');
 console.log('&autoreload: periodically run newvibesbot.php');
 console.log('&breaking: add a card for breaking news');
 console.log('&useweblinks: link to www articles instead of newsroom posts');
+console.log('&multinav: profile / home / explore');
 console.log('-------------------');
 
 var ALL_VIBES = [];
 var AMALGAM = [];
-var FOLLOWS = JSON.parse(localStorage.getItem('myvibes')) || {};
 
 var COLORS = [
     'darkred',
@@ -249,6 +261,7 @@ var SECONDARY_COLORS = [
     'magenta',
     'blue'
 ];
+var CARDSTREAM_SCROLL_THROTTLER = 0;
 
 document.addEventListener("DOMContentLoaded", function(event) {
 	// asked to clear out storage?
@@ -280,6 +293,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	}
 });
 
+// this creates a first level user prompt (i.e. the thing that starts the convo?) dom object
 var create_prompt = function(prompt_obj, theme_color) {
 	var prompt = document.createElement('div');
 	prompt.className = 'prompt';
@@ -315,6 +329,7 @@ var create_prompt = function(prompt_obj, theme_color) {
 	return prompt;
 }
 
+// this creates a second level reply dom object
 var create_riposte = function(riposte_obj, theme_color)	{
 	var riposte = document.createElement('div');
 	if(theme_color) riposte.style.borderColor = theme_color;
@@ -346,6 +361,7 @@ var create_riposte = function(riposte_obj, theme_color)	{
  	return riposte;
 }
 
+// this creates the up / down / reply engagement info with counts
 var create_engagement_meta = function(engagement_obj)	{
 	var engagement = document.createElement('div');
 	engagement.className = 'engagement';
@@ -354,6 +370,7 @@ var create_engagement_meta = function(engagement_obj)	{
 	return engagement;
 }
 
+// this creates the context (e.g. the article) dom object
 var create_context = function(context_obj, verbose, theme_color)	{
 	if(verbose)	{
 		var context = document.createElement('div');
@@ -377,6 +394,29 @@ var create_context = function(context_obj, verbose, theme_color)	{
 	return context;
 }
 
+// this function creates our standard top-level padded card construct
+function create_cardstream_card_shell() {
+	var vibe_card = document.createElement('div');
+	vibe_card.style.background = 'white';
+	// vibe_card.style.boxShadow = '0 0 10px 0 rgba(0,0,0,0.5)'
+	vibe_card.style.padding = '10px';
+	vibe_card.style.margin = '0 0 20px 0';
+	vibe_card.style.perspective = '1000px';
+
+	return vibe_card;	
+}
+
+// this function creates a user comment
+var create_cardstream_comment_block_shell = function(postscommentsobj, theme_color) {	
+	var comment_block = document.createElement('div');
+	comment_block.className = 'cardstream_comment_block';
+	comment_block.fontWeight = 'normal'
+	comment_block.innerHTML = '<div style="color: #888; font-size: 11px; margin-bottom: 5px; vertical-align: middle">' + '<img style="width: 20px; height: 20px; border-radius: 10px; position: relative; margin-right: 6px" src="' + postscommentsobj.author_img + '"/>' + '<span style="position: relative; top: -6px">' + postscommentsobj.author_name + ' &bull; ' + ((postscommentsobj.comment_relative_time > 0) ? (postscommentsobj.comment_relative_time + 'h') : ('<span style="color: red">new</span>')) + '</span>' + '</div>' + '<div style="position: relative; margin-bottom: 20px; border-left: 5px solid ' + theme_color + '; padding: 0px 20px">' + postscommentsobj.text + '</div>';
+
+	return comment_block;
+};
+
+// this function creates the individual vibe cards that exist in the cardstream
 function create_vibe_card(obj) {
 	console.log('function: create_vibe_card();');
 
@@ -395,28 +435,10 @@ function create_vibe_card(obj) {
 	var secondary_color = SECONDARY_COLORS[vibe_id.charCodeAt(1) % COLORS.length];
 
 	var is_ntk = vibe_id == '@NTKVIDEO';
-	// var is_mega = vibe_id == '@MEGASTREAMVIDEO';
-	var is_mega = vibe_id == '@MEGASTREAM';
+	var is_mega = (vibe_id == '@MEGASTREAMVIDEO') || (vibe_id == '@MEGASTREAM');
 
-	var vibe_card = document.createElement('div');
-	vibe_card.style.background = 'white';
-	// vibe_card.style.boxShadow = '0 0 10px 0 rgba(0,0,0,0.5)'
-	vibe_card.style.padding = '10px';
-	vibe_card.style.margin = '0 0 20px 0';
-	vibe_card.style.perspective = '1000px';
-	
-	var card_header = document.createElement('h1');
-	card_header.innerHTML = vibe_name;
-	card_header.style.margin = '0';
-	card_header.style.display = 'inline-block'
-	card_header.style.paddingBottom = '10px';
-	card_header.style.borderBottom = '2px solid gray'
-	card_header.style.borderColor = theme_color;
-	// text gradient stuff
-	card_header.style.background = '-webkit-linear-gradient(135deg, ' + secondary_color + ', ' + theme_color + ')';
-	card_header.style.webkitBackgroundClip = 'text';
-	card_header.style.webkitTextFillColor= 'transparent';
-	vibe_card.appendChild(card_header);
+	var vibe_card = create_cardstream_card_shell();
+	vibe_card.appendChild(create_cardstream_card_header_shell(vibe_name, theme_color, secondary_color));
 
 	if(selected_list.length == 0) {
 		var empty_message = document.createElement('div');
@@ -428,7 +450,7 @@ function create_vibe_card(obj) {
 		// use the selected list
 		for(var j = 0; j < selected_list.length; j++)	{
 			var vibe_story = document.createElement('div');
-			vibe_story.className = 'vibe_story';
+			vibe_story.className = 'cardstream_vibe_story';
 
 			var post_meta;
 			// first figure out which list we're using and set the post meta accordingly
@@ -451,27 +473,8 @@ function create_vibe_card(obj) {
 				// && selected_list[j].score > 0.97
 			) {
 				// this one has a comment
-				var comment_block = document.createElement('div');
-				comment_block.fontWeight = 'normal'
-				comment_block.innerHTML = '<div style="color: #888; font-size: 11px; margin-bottom: 5px; vertical-align: middle">' + '<img style="width: 20px; height: 20px; border-radius: 10px; position: relative; margin-right: 6px" src="' + selected_list[j].author_img + '"/>' + '<span style="position: relative; top: -6px">' + selected_list[j].author_name + ' &bull; ' + ((selected_list[j].comment_relative_time > 0) ? (selected_list[j].comment_relative_time + 'h') : ('<span style="color: red">new</span>')) + '</span>' + '</div>' + '<div style="position: relative; margin-bottom: 20px; border-left: 5px solid ' + theme_color + '; padding: 0px 20px">' + selected_list[j].text + '</div>';
+				var comment_block = create_cardstream_comment_block_shell(selected_list[j], theme_color);
 				vibe_story.appendChild(comment_block);
-
-				// add the quote thinger
-				var quote_bg = document.createElement('div');
-				quote_bg.style.background = 'url(https://d30y9cdsu7xlg0.cloudfront.net/png/19279-200.png)';
-				quote_bg.style.backgroundRepeat = 'no-repeat'
-				quote_bg.style.backgroundSize = '100px';
-				quote_bg.style.backgroundPosition = '0% 100%';
-				quote_bg.style.opacity = 0.1;
-				quote_bg.style.transform = 'rotate(180deg)';
-				quote_bg.style.position = 'absolute';
-				quote_bg.style.position = 'absolute';
-				quote_bg.style.top = 0;
-				quote_bg.style.left= 0;
-
-				quote_bg.style.width = '100%';
-				quote_bg.style.height = '100%';
-				vibe_story.appendChild(quote_bg);
 
 				has_comment = true;
 			}
@@ -610,7 +613,7 @@ function create_vibe_card(obj) {
 
 					// unhide all the hidden stories
 					for(var i = 0; i < vibe_card.childNodes.length; i++) {
-						if(vibe_card.childNodes[i].className == 'vibe_story') {
+						if(vibe_card.childNodes[i].className == 'cardstream_vibe_story') {
 							vibe_card.childNodes[i].style.display = 'block';
 						}
 					}
@@ -797,18 +800,22 @@ function jsonp_parse_multi_posters(obj) {
 	console.log(obj);
 }
 
-function jsonp_parse_amalgam(obj) {
+function jsonp_parse_amalgam(full_amalgam) {
 	document.title = 'cardstream';	
 	console.log('handler: amalgam cardstream');
-	console.log(obj);
-	AMALGAM = obj;
-	ALL_VIBES = AMALGAM;
+	console.log(full_amalgam);
+	
+	// var parsing
+	AMALGAM = full_amalgam; // store all this info in our superglobal
+	ALL_VIBES = AMALGAM.cards; // another superglobal
+	var obj = AMALGAM.cards; // the obj we'll parse here in this function
 
-	// get followed vibes
-	var followed_vibes = FOLLOWS;
+	// get followed vibes from localstorage
+	var followed_vibes = JSON.parse(localStorage.getItem('myvibes')) || {};
 
 	// styles
 	document.body.style.background = '#fff';
+	document.body.style.transitionDuration = '0.3s';
 
 	// container for the main cardstream
 	var cardstream_main = document.createElement('div');
@@ -829,7 +836,7 @@ function jsonp_parse_amalgam(obj) {
 		var is_breaking = vibe_id == '@BREAKING';
 
 		if(is_breaking) {
-			// it's breaking news!
+			// it's breaking news! it gets extra special handling
 			var	breaking_card = document.createElement('div');
 			breaking_card.style.fontSize = '36px';
 			breaking_card.style.position = 'relative';
@@ -857,7 +864,145 @@ function jsonp_parse_amalgam(obj) {
 	// now paint the suggested vibes carousel
 	cardstream_main.appendChild(create_suggested_vibes_card(followed_vibes));
 
+	// add the main cardstream to body
 	document.body.appendChild(cardstream_main);
+
+	if(window.location.href.indexOf('multinav') > -1) {
+		// container for the cardstream explore
+		var cardstream_explore = document.createElement('div');
+		cardstream_explore.style.position = 'absolute';
+		cardstream_explore.style.top = 0;
+		cardstream_explore.style.left = 0;
+		cardstream_explore.style.width = '100%';
+		cardstream_explore.style.transitionDuration = '0.3s';
+		cardstream_explore.style.transform = 'translate3d(100%, 0, 0)';
+		cardstream_explore.id = 'cardstream_explore';
+		var explore_card = create_cardstream_card_shell();
+		explore_card.appendChild(create_cardstream_card_header_shell('Explore'));
+		
+		var explore_content = AMALGAM.explore;
+		for(var i = 0; i < explore_content.length; i++)	{
+			console.log(explore_content)
+
+			if(explore_content[i].type == 'comment') {
+				var vibe_story = document.createElement('div');
+				vibe_story.style.position = 'relative';
+				vibe_story.appendChild(create_cardstream_comment_block_shell(explore_content[i].blob, 'gray'));				
+
+				explore_card.appendChild(vibe_story)
+			}
+		}
+		cardstream_explore.appendChild(explore_card);
+		// add the explore to the body
+		document.body.appendChild(cardstream_explore);
+
+		// container for the cardstream profile
+		var cardstream_profile = document.createElement('div');
+		cardstream_profile.style.position = 'absolute';
+		cardstream_profile.style.top = 0;
+		cardstream_profile.style.left = 0;
+		cardstream_profile.style.width = '100%';
+		cardstream_profile.style.transitionDuration = '0.3s';
+		cardstream_profile.style.transform = 'translate3d(-100%, 0, 0)';
+		cardstream_profile.id = 'cardstream_profile';
+		var profile_card = document.createElement('div');
+		profile_card.innerHTML = '<div style="text-align: center; width: 100%; padding-top: 20px"><div style="background: url(http://dandyheadshots.com/wp-content/uploads/2016/12/jackie-o-keefe-of-trueu-indianapolis-headshot-photography-by-josh-humble-2-2.jpg) no-repeat center center; background-size: cover; width: 350px; height: 350px; display: inline-block; border-radius: 175px; border: 10px solid white; box-shadow: 0 0 10px 0 gray"></div></div><div style="font-size: 30px; text-align: center; margin: 10px">Betty Fakename</div>';
+		cardstream_profile.appendChild(profile_card);
+		// add the profile to the body
+		document.body.insertBefore(cardstream_profile, document.body.childNodes[0]);
+
+		// now create the bottom bar
+		var cardstream_nav = document.createElement('div');
+		cardstream_nav.id = 'cardstream_nav';
+		cardstream_nav.style.transitionDuration = '0.3s'
+		cardstream_nav.style.position = 'fixed';
+		cardstream_nav.style.bottom = '0';
+		cardstream_nav.style.left = '0';
+		cardstream_nav.style.width = '100%';
+		cardstream_nav.style.height = '40px';
+		cardstream_nav.style.lineHeight = '40px';	
+		cardstream_nav.style.boxShadow = '0 0 10px 0 gray';
+		cardstream_nav.style.background = 'rgba(255,255,255,0.75)';
+		cardstream_nav.innerHTML = '<div style="height: 40px; width: 33%; text-align: center; display: inline-block"><img style="transform: scale(0.7); height: 100%" src="https://s.yimg.com/cv/ae/default/171219/icons8-user-male-50.png"/></div><div style="height: 40px; width: 34%; text-align: center; display: inline-block"><img style="transform: scale(0.7); height: 100%" src="https://s.yimg.com/cv/ae/default/171219/icons8-home-50.png"/></div><div style="height: 40px; width: 33%; text-align: center; display: inline-block"><img style="transform: scale(0.7); height: 100%" src="https://s.yimg.com/cv/ae/default/171219/icons8-search-50.png"/></div>';
+		// https://s.yimg.com/cv/ae/default/171219/icons8-contacts-50.png
+		// make the middle selected
+		cardstream_nav.childNodes[1].style.background = 'linear-gradient(135deg, #eee, #ccc)';
+		// click handler for each tab
+		for(var i = 0; i < cardstream_nav.childNodes.length; i++) {
+			cardstream_nav.childNodes[i].onclick = function() {
+				// find out which button i am
+				var me;
+				for(var i = 0; i < this.parentNode.childNodes.length; i++)	{
+					if(this == this.parentNode.childNodes[i]) me = i;
+				}
+
+				for(var i = 0; i < document.body.childNodes.length; i++)	{
+					// skip the navbar
+					if(document.body.childNodes[i] == this.parentNode) {
+						continue;
+					}
+
+					if(i == me) {
+						this.parentNode.childNodes[i].style.background = 'linear-gradient(135deg, #eee, #ccc)';
+					}
+					else {
+						this.parentNode.childNodes[i].style.background = '';	
+					}
+
+					// move the right amount
+					document.body.childNodes[i].style.transform = 'translate3d(' + ((i - me) * 100) + '%, 0, 0)';
+				}
+
+				window.scrollTo({
+					'behavior' : 'smooth',
+					'left' : '0',
+					'top' : '0'
+				});
+			}
+		}
+		document.body.appendChild(cardstream_nav);
+		// TODO make the nav disappear sometimes
+		window.CARDSTREAM_LAST_SCROLL_POSITION = 0;
+		document.addEventListener("scroll", function(event) {
+			// check if we're plannign on doing something already; if so, clear it
+			if(window.CARDSTREAM_SCROLL_THROTTLER_TIMEOUT)	{
+			 	window.clearTimeout(window.CARDSTREAM_SCROLL_THROTTLER_TIMEOUT);
+			}
+
+			// set a new timeout to handle things
+			window.CARDSTREAM_SCROLL_THROTTLER_TIMEOUT = window.setTimeout(function() {
+				document.getElementById('cardstream_nav').style.transform =	(window.CARDSTREAM_LAST_SCROLL_POSITION < document.body.scrollTop) ? 'translateY(100%)' : '';
+
+				window.CARDSTREAM_LAST_SCROLL_POSITION = document.body.scrollTop;
+
+				console.log('fire')
+			}, 100);
+		});
+	}
+}
+
+function create_cardstream_card_header_shell(header_text, theme_color, secondary_color) {
+	if(theme_color && secondary_color) {
+		// it's passed in!
+	}
+	else {
+		theme_color = COLORS[header_text.charCodeAt(0) % COLORS.length]
+		secondary_color = SECONDARY_COLORS[header_text.charCodeAt(0) % COLORS.length]
+	}
+
+	var card_header = document.createElement('h1');
+	card_header.innerHTML = header_text;
+	card_header.style.margin = '0';
+	card_header.style.display = 'inline-block'
+	card_header.style.paddingBottom = '10px'
+	card_header.style.marginBottom = '10px'
+	card_header.style.borderBottom = '2px solid gray'
+	card_header.style.borderColor = theme_color;
+	card_header.style.background = '-webkit-linear-gradient(135deg, ' + secondary_color + ', ' + theme_color + ')';
+	card_header.style.webkitBackgroundClip = 'text';
+	card_header.style.webkitTextFillColor= 'transparent';
+
+	return card_header;
 }
 
 function create_suggested_vibes_card(followed_vibes) {
@@ -869,17 +1014,7 @@ function create_suggested_vibes_card(followed_vibes) {
 	suggested_vibes.style.padding = '10px';
 	suggested_vibes.style.margin = '10px 0';
 	
-	var card_header = document.createElement('h1');
-	card_header.innerHTML = 'Get more cards';
-	card_header.style.margin = '0';
-	card_header.style.display = 'inline-block'
-	card_header.style.paddingBottom = '10px'
-	card_header.style.marginBottom = '10px'
-	card_header.style.borderBottom = '2px solid gray'
-	card_header.style.borderColor = theme_color;
-	card_header.style.background = '-webkit-linear-gradient(135deg, ' + secondary_color + ', ' + theme_color + ')';
-	card_header.style.webkitBackgroundClip = 'text';
-	card_header.style.webkitTextFillColor= 'transparent';
+	var card_header = create_cardstream_card_header_shell('Get more cards', theme_color, secondary_color);
 	suggested_vibes.appendChild(card_header);
 	
 	var merchandised_vibes = 0;
@@ -993,10 +1128,10 @@ function create_suggested_vibes_card(followed_vibes) {
 function ui_add_vibe_card(vibe_id) {
 	console.log('adding an explicit follow');
 
-	for(var i = 0; i < AMALGAM.length; i++)	{
-		if(vibe_id == AMALGAM[i].id)	{
+	for(var i = 0; i < AMALGAM.cards.length; i++)	{
+		if(vibe_id == AMALGAM.cards[i].id)	{
 			// add it!
-			var vibe_card = create_vibe_card(AMALGAM[i]);
+			var vibe_card = create_vibe_card(AMALGAM.cards[i]);
 			document.body.appendChild(vibe_card);
 			window.scrollTo({
 				'behavior' : 'smooth',
