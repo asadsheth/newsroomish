@@ -44,7 +44,6 @@ body{
 	font-family: Yahoo-Sans;
 	font-size: 15px;
 	width: 100%;
-	overflow: hidden;
 }
 
 a {
@@ -597,64 +596,64 @@ function create_vibe_card(obj) {
 			// append it to the card
 			vibe_card.appendChild(vibe_story);
 		}
-
-		if(!is_ntk) {
-			var vibe_card_extender = document.createElement('div');
-			vibe_card_extender.style.textAlign = 'left';
-			
-			var vibe_card_more_button = document.createElement('button');
-			vibe_card_more_button.style.border = 'none';
-			vibe_card_more_button.style.background = 'none';
-			vibe_card_more_button.style.color = '#666';
-			vibe_card_more_button.style.padding = '10px 0px';
-			vibe_card_more_button.innerHTML = selected_list.length > 3 ? 'Read more' : 'That\'s all for now';
-			// handler for when people ask for more
-			if(selected_list.length > 3) {
-				vibe_card_more_button.onclick = function() {
-					var vibe_card = this.parentNode.parentNode;
-
-					// unhide all the hidden stories
-					for(var i = 0; i < vibe_card.childNodes.length; i++) {
-						if(vibe_card.childNodes[i].className == 'cardstream_vibe_story') {
-							vibe_card.childNodes[i].style.display = 'block';
-						}
-					}
-
-					// hide the read more thinger
-					this.parentNode.style.display = 'none';
-				}
-			}
-			vibe_card_extender.appendChild(vibe_card_more_button);
-
-			if(vibe_id.indexOf('@') == -1)	{
-				var vibe_card_unsubscribe_button = document.createElement('button');
-				vibe_card_unsubscribe_button.style.border = 'none';
-				vibe_card_unsubscribe_button.style.border = 'none';
-				vibe_card_unsubscribe_button.style.background = 'none';
-				vibe_card_unsubscribe_button.style.color = '#666';
-				vibe_card_unsubscribe_button.style.padding = '10px 0px';
-				vibe_card_unsubscribe_button.innerHTML = '&nbsp; &bull; &nbsp; Unsubscribe';
-				// handler for when people ask for more
-				vibe_card_unsubscribe_button.vibe_id = vibe_id;
-				vibe_card_unsubscribe_button.onclick = function() {
-					// update followed vibes
-					var vibes = JSON.parse(localStorage.getItem('myvibes')) || {};
-					delete vibes[this.vibe_id];
-					localStorage.setItem('myvibes', JSON.stringify(vibes));
-					
-					// hide the more actions thinger
-					this.innerHTML = '&nbsp; &bull; &nbsp; Got it! We won\'t show this to you anymore.';
-
-					// unfocus the button
-					this.blur();
-				}
-				vibe_card_extender.appendChild(vibe_card_unsubscribe_button);
-			}
-
-			vibe_card.appendChild(vibe_card_extender);
-
-		}
 	}
+
+	if(!is_ntk) {
+		var vibe_card_extender = document.createElement('div');
+		vibe_card_extender.style.textAlign = 'left';
+		
+		var vibe_card_more_button = document.createElement('button');
+		vibe_card_more_button.style.border = 'none';
+		vibe_card_more_button.style.background = 'none';
+		vibe_card_more_button.style.color = '#666';
+		vibe_card_more_button.style.padding = '10px 0px';
+		vibe_card_more_button.innerHTML = selected_list.length > 3 ? 'Read more' : 'That\'s all for now';
+		// handler for when people ask for more
+		if(selected_list.length > 3) {
+			vibe_card_more_button.onclick = function() {
+				var vibe_card = this.parentNode.parentNode;
+
+				// unhide all the hidden stories
+				for(var i = 0; i < vibe_card.childNodes.length; i++) {
+					if(vibe_card.childNodes[i].className == 'cardstream_vibe_story') {
+						vibe_card.childNodes[i].style.display = 'block';
+					}
+				}
+
+				// hide the read more thinger
+				this.parentNode.style.display = 'none';
+			}
+		}
+		vibe_card_extender.appendChild(vibe_card_more_button);
+
+		if(vibe_id.indexOf('@') == -1)	{
+			var vibe_card_unsubscribe_button = document.createElement('button');
+			vibe_card_unsubscribe_button.style.border = 'none';
+			vibe_card_unsubscribe_button.style.border = 'none';
+			vibe_card_unsubscribe_button.style.background = 'none';
+			vibe_card_unsubscribe_button.style.color = '#666';
+			vibe_card_unsubscribe_button.style.padding = '10px 0px';
+			vibe_card_unsubscribe_button.innerHTML = '&nbsp; &bull; &nbsp; Unsubscribe';
+			// handler for when people ask for more
+			vibe_card_unsubscribe_button.vibe_id = vibe_id;
+			vibe_card_unsubscribe_button.onclick = function() {
+				// update followed vibes
+				var vibes = JSON.parse(localStorage.getItem('myvibes')) || {};
+				delete vibes[this.vibe_id];
+				localStorage.setItem('myvibes', JSON.stringify(vibes));
+				
+				// hide the more actions thinger
+				this.innerHTML = '&nbsp; &bull; &nbsp; Got it! We won\'t show this to you anymore.';
+
+				// unfocus the button
+				this.blur();
+			}
+			vibe_card_extender.appendChild(vibe_card_unsubscribe_button);
+		}
+
+		vibe_card.appendChild(vibe_card_extender);
+
+	}	
 
 	return vibe_card;	
 }
@@ -842,12 +841,16 @@ function jsonp_parse_amalgam(full_amalgam) {
 			var	breaking_card = document.createElement('div');
 			breaking_card.style.fontSize = '36px';
 			breaking_card.style.position = 'relative';
-			breaking_card.style.padding = '30px 10px 50px 10px';
+			breaking_card.style.padding = '100% 10px 50px 10px';
 			breaking_card.style.color = 'white';
-			breaking_card.style.background = 'url(https://s.yimg.com/uu/api/res/1.2/wqnJSfOfa3viHAaifQUa7g--~B/Zmk9c3RyaW07aD0zODg7cHlvZmY9MDtxPTk1O3c9NzIwO3NtPTE7YXBwaWQ9eXRhY2h5b24-/https://media.zenfs.com/creatr-images/GLB/2017-12-20/c6510710-e5c0-11e7-970f-75cc8c9abb98_image-9208.cf.webp) cover';
-			breaking_card.innerHTML = '<div style="background: linear-gradient(135deg, red, darkorange); padding: 10px 20px 10px 10px; margin-left: -10px; margin-bottom: 10px; display: inline-block; border-radius: 0 10px 10px 0; color: white; font-weight: bold; text-shadow: 1px 1px 10px black">' + obj[i].heading + '</div>' + '<div style="font-size: 18px; color: #333">' + obj[i].msg + '</div>' + '<div style="height: 50px; width: 100%; position: absolute; bottom: 0; left: 0; background: linear-gradient(rgba(255,255,255,0), white)">&nbsp;</div>';
+			breaking_card.style.background = 'url(https://s.yimg.com/uu/api/res/1.2/wqnJSfOfa3viHAaifQUa7g--~B/Zmk9c3RyaW07aD0zODg7cHlvZmY9MDtxPTk1O3c9NzIwO3NtPTE7YXBwaWQ9eXRhY2h5b24-/https://media.zenfs.com/creatr-images/GLB/2017-12-20/c6510710-e5c0-11e7-970f-75cc8c9abb98_image-9208.cf.webp)';
+			breaking_card.style.backgroundSize = 'cover';
+			breaking_card.style.backgroundPosition = '50% 50%';
+			breaking_card.style.marginBottom = '10px';
+			breaking_card.style.boxShadow = '0 0 10px 0 gray';
+			breaking_card.innerHTML = '<div style="background: linear-gradient(135deg, red, darkorange); padding: 10px 20px 10px 10px; margin-left: -10px; margin-bottom: 10px; display: inline-block; border-radius: 0 10px 10px 0; color: white; font-weight: bold; text-shadow: 1px 1px 10px black">' + obj[i].heading + '</div>' + '<div style="font-size: 18px; color: white; text-shadow: 1px 1px 10px black">' + obj[i].msg + '</div>';
 			// for now, only append when explicitly requested
-			if(window.location.href.indexOf('breaking') > -1) document.body.appendChild(breaking_card);
+			if(window.location.href.indexOf('breaking') > -1) cardstream_main.appendChild(breaking_card);
 		}
 		else if(
 			is_ntk
