@@ -1053,7 +1053,7 @@ function create_suggested_vibes_card(followed_vibes) {
 		// things to keep track of
 		var vibe_id = ALL_VIBES[random_index].id;
 		var vibe_name = ALL_VIBES[random_index].name;
-		var vibe_desc = ALL_VIBES[random_index].meta ? ALL_VIBES[random_index].meta.description : '?';
+		var vibe_desc = ALL_VIBES[random_index].meta ? ALL_VIBES[random_index].meta.description : 'Tap to read more!';
 		var vibe_img = ALL_VIBES[random_index].meta ? ALL_VIBES[random_index].meta.image.originalUrl : '';
 		var vibe_subs = ALL_VIBES[random_index].meta ? ALL_VIBES[random_index].meta.userSubscriberCount : '?';
 		var theme_color = COLORS[vibe_id.charCodeAt(1) % COLORS.length]
@@ -1111,7 +1111,7 @@ function create_suggested_vibes_card(followed_vibes) {
 	vibe_card_more_button.style.padding = '10px 0px';
 	vibe_card_more_button.innerHTML = merchandised_vibes == 6 ? 'Show more' : 'That\'s all for now';
 	// handler for when people ask for more
-	if(merchandised_vibes == 6) {
+	if(merchandised_vibes == 15) {
 		vibe_card_more_button.onclick = function() {
 			var vibe_card = this.parentNode.parentNode;
 
