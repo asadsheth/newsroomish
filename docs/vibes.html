@@ -466,6 +466,7 @@ function create_vibe_card(obj) {
 			has_vertical_thumbnail = is_vertical_video;
 			var has_comment = false;
 
+			// if there's a comment note it
 			if(
 				selected_list == vibe_postscomments && !selected_list[j].bot
 				// && !has_vertical_thumbnail // disable comments for vertical videos for now
@@ -595,6 +596,9 @@ function create_vibe_card(obj) {
 
 			// append it to the card
 			vibe_card.appendChild(vibe_story);
+			// uncomment the following line to add the user contribution after the article title
+			// if(has_comment) vibe_story.appendChild(comment_block);
+
 		}
 	}
 
@@ -833,7 +837,7 @@ function jsonp_parse_amalgam(full_amalgam) {
 
 		var is_ntk = vibe_id == '@NTKVIDEO';
 		// var is_mega = vibe_id == '@MEGASTREAMVIDEO';
-		var is_mega = vibe_id == '@MEGASTREAM';
+		var is_mega = (vibe_id == '@MEGASTREAM' || vibe_id == '@MEGASTREAMVIDEO');
 		var is_breaking = vibe_id == '@BREAKING';
 
 		if(is_breaking) {
@@ -1076,8 +1080,8 @@ function create_suggested_vibes_card(followed_vibes) {
 		
 		suggested_vibes.appendChild(vibe_card);
 
-		// hide more than 6
-		if(merchandised_vibes > 5) {
+		// hide more than X
+		if(merchandised_vibes > 15) {
 			vibe_card.style.display = 'none';
 		}
 		else {
