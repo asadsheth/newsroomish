@@ -1140,7 +1140,7 @@ function ui_add_vibe_card(vibe_id) {
 		if(vibe_id == AMALGAM.cards[i].id)	{
 			// add it!
 			var vibe_card = create_vibe_card(AMALGAM.cards[i]);
-			document.body.appendChild(vibe_card);
+			document.getElementById('cardstream_main').insertBefore(vibe_card, document.getElementById('cardstream_main').lastChild);
 			window.scrollTo({
 				'behavior' : 'smooth',
 				'left' : '0',
