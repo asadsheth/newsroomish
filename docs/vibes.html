@@ -225,6 +225,7 @@ console.log('&autoreload: periodically run newvibesbot.php');
 console.log('&breaking: add a card for breaking news');
 console.log('&useweblinks: link to www articles instead of newsroom posts');
 console.log('&multinav: profile / home / explore');
+console.log('&ntk: use a special ntk template; else it looks the same');
 console.log('-------------------');
 
 var ALL_VIBES = [];
@@ -435,7 +436,7 @@ function create_vibe_card(obj) {
 	var theme_color = COLORS[vibe_id.charCodeAt(1) % COLORS.length];
 	var secondary_color = SECONDARY_COLORS[vibe_id.charCodeAt(1) % COLORS.length];
 
-	var is_ntk = vibe_id == '@NTKVIDEO';
+	var is_ntk = vibe_id == '@NTKVIDEO' && (window.location.href.indexOf('ntk') > -1);
 	var is_mega = (vibe_id == '@MEGASTREAMVIDEO') || (vibe_id == '@MEGASTREAM');
 
 	var vibe_card = create_cardstream_card_shell();
@@ -589,7 +590,7 @@ function create_vibe_card(obj) {
 			if(
 				(is_ntk && j > 2) // show 3 items in NTK
 				|| 
-				(!is_ntk && j > 3) // show 4 items in other cards
+				(!is_ntk && j > 2) // show 3 items in other cards
 			) {
 				vibe_story.style.display = 'none';
 			}
@@ -1041,6 +1042,9 @@ function create_suggested_vibes_card(followed_vibes) {
 
 		// skip specials like NTK and megastream
 		if(ALL_VIBES[random_index].id.indexOf('@') > -1) continue;
+
+		// skip broken meta
+		if(ALL_VIBES[random_index].meta === null) continue;
 
 		// see if we did it already
 		if(merchandised_vibes_list[ALL_VIBES[random_index].id]) continue;		
