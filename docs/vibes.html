@@ -264,6 +264,7 @@ var SECONDARY_COLORS = [
     'blue'
 ];
 var CARDSTREAM_SCROLL_THROTTLER = 0;
+var DEFAULT_NUM_STORIES_PER_CARD = 10;
 
 document.addEventListener("DOMContentLoaded", function(event) {
 	// asked to clear out storage?
@@ -588,9 +589,9 @@ function create_vibe_card(obj) {
 
 			// hide the leftovers until they hit read more
 			if(
-				(is_ntk && j > 2) // show 3 items in NTK
+				(is_ntk && j > (DEFAULT_NUM_STORIES_PER_CARD -1)) // show 3 items in NTK
 				|| 
-				(!is_ntk && j > 2) // show 3 items in other cards
+				(!is_ntk && j > (DEFAULT_NUM_STORIES_PER_CARD -1)) // show 3 items in other cards
 			) {
 				vibe_story.style.display = 'none';
 			}
@@ -612,7 +613,7 @@ function create_vibe_card(obj) {
 		vibe_card_more_button.style.background = 'none';
 		vibe_card_more_button.style.color = '#666';
 		vibe_card_more_button.style.padding = '10px 0px';
-		vibe_card_more_button.innerHTML = selected_list.length > 3 ? 'Read more' : 'That\'s all for now';
+		vibe_card_more_button.innerHTML = selected_list.length > DEFAULT_NUM_STORIES_PER_CARD ? 'Read more' : 'That\'s all for now';
 		// handler for when people ask for more
 		if(selected_list.length > 3) {
 			vibe_card_more_button.onclick = function() {
