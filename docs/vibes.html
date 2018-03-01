@@ -264,7 +264,7 @@ var SECONDARY_COLORS = [
     'blue'
 ];
 var CARDSTREAM_SCROLL_THROTTLER = 0;
-var DEFAULT_NUM_STORIES_PER_CARD = 50;
+var DEFAULT_NUM_STORIES_PER_CARD = 8;
 
 document.addEventListener("DOMContentLoaded", function(event) {
 	// asked to clear out storage?
@@ -1231,7 +1231,7 @@ function jsonp_parse_posts(obj) {
 }
 
 // function for auto refreshing the backend
-var RELOAD_FREQ = 5; // in minutes
+var RELOAD_FREQ = 10; // in minutes
 var reload_backend = function() {
 	console.log('starting backend reload');
 	var scr_elem = document.createElement('script');
