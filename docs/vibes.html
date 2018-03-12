@@ -1007,6 +1007,7 @@ function jsonp_parse_threadlines(threadlines_obj)	{
 	optionlist += '<option value="true">[everything]</option>';
 	optionlist += '<option selected value="title.match(/\\Walexa\\W/) || summary.match(/\\Walexa\\W/) || summary.match(/\\Wgoogle assistant\\W/) || title.match(/\\Wgoogle assistant\\W/)">alexa and assistant</option>'
 	optionlist += '<option value="text.match(/\\Wbollywood\\W/)">bollywood</option>';
+	optionlist += '<option value="(text.match(/\\Wford motor\\W/) || text.match(/\\Wgeneral motors\\W/) || text.match(/\\Whonda\\W/) || text.match(/\\Wnissan\\W/) || text.match(/\\Wvag\\W/)) && provider != \'mercury news\'">detroit and foreign auto</option>';
 	optionlist += '<option value="text.match(/\\Whealth care\\W/)">health care</option>';
 	optionlist += '<option value="provider == \'last night now\'">last night now</option>';
 	optionlist += '<option value="provider == \'last night now\' && text.indexOf(\'bachelor\') == -1">last night now, but no bachelor</option>';
