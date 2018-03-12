@@ -1056,7 +1056,14 @@ function jsonp_parse_threadlines(threadlines_obj)	{
 			summary = post['summary'] ? post['summary'].toLowerCase() : '';
 			text = title + ' ' + summary;
 
-			if(eval(condition)) {
+			if(
+				(
+					provider != 'pr newswire' &&
+					provider != 'business wire' &&
+					provider != 'globenewswire'					
+				) &&
+				(eval(condition))
+			) {
 				matched_stories.push(post);
 			}
 		}
