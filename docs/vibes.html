@@ -230,6 +230,7 @@ console.log('-------------------');
 
 var ALL_VIBES = [];
 var AMALGAM = [];
+var THREADLINES = {};
 
 var COLORS = [
     'darkred',
@@ -288,6 +289,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		console.log('config: cardstream');
 		var scr = document.createElement('script');
 		scr.src = 'caches/amalgam.jsonp?rand=' + Math.random();
+		document.head.appendChild(scr);
+	}
+	else if(window.location.href.indexOf('threadlines') > -1) {
+		document.body.innerHTML = '';
+
+		console.log('config: threadlines');
+		var scr = document.createElement('script');
+		scr.src = 'caches/threadlines.jsonp?rand=' + Math.random();
 		document.head.appendChild(scr);
 	}
 	else {
@@ -988,6 +997,91 @@ function jsonp_parse_amalgam(full_amalgam) {
 				console.log('fire')
 			}, 100);
 		});
+	}
+}
+
+function jsonp_parse_threadlines(threadlines_obj)	{
+	THREADLINES = threadlines_obj;
+
+	var optionlist = '';
+	optionlist += '<option value="true">[everything]</option>';
+	optionlist += '<option selected value="title.match(/\\Walexa\\W/) || summary.match(/\\Walexa\\W/) || summary.match(/\\Wgoogle assistant\\W/) || title.match(/\\Wgoogle assistant\\W/)">alexa and assistant</option>'
+	optionlist += '<option value="text.match(/\\Wbollywood\\W/)">bollywood</option>';
+	optionlist += '<option value="text.match(/\\Whealth care\\W/)">health care</option>';
+	optionlist += '<option value="provider == \'last night now\'">last night now</option>';
+	optionlist += '<option value="provider == \'last night now\' && text.indexOf(\'bachelor\') == -1">last night now, but no bachelor</option>';
+	optionlist += '<option value="text.match(/\\Wmachine learning\\W/)">machine learning</option>';
+	optionlist += '<option value="text.match(/\\Wmachine learning\\W/) || text.match(/\\Wartificial intelligence\\W/)">machine learning or artificial intelligence</option>';
+	optionlist += '<option value="!text.match(/\\Wpolitics\\W/) && topic != \'politics\' && !text.match(/\\Wtrump\\W/)">politics-free and trump-free news feed</option>';
+	optionlist += '<option value="(text.match(/\\Wpolitics\\W/) || topic == \'politics\') && !text.match(/\\Wtrump\\W/) && provider != \'yahoo news video\'">politics, no trump, no yahoo news video</option>';
+	optionlist += '<option value="aspect == 0.56">vertical videos</option>';
+	optionlist += '<option value="aspect == 0.56 && !text.match(/\\Wtrump\\W/)">vertical videos not about trump</option>';
+	optionlist += '<option value="aspect == 0.56 && !provider.match(/yahoo/)">vertical videos not from yahoo</option>';
+
+	document.body.innerHTML = '<form id="query"><select id="threadlines_preselects" style="margin: 10px 10%; width: 80%; background: white; border: 1px outset">' + optionlist + '</select><textarea id="threadlines_conditions" style="width: 80%; margin: 10px 10%" rows=10>title.match(/\\Walexa\\W/) || summary.match(/\\Walexa\\W/) || summary.match(/\\Wgoogle assistant\\W/) || title.match(/\\Wgoogle assistant\\W/)</textarea><div style="text-align: center"><input type="button" id="query_submit" value="go" style="border: 2px outset; margin: 10px"/></div></form><div id="stream"></div>';
+
+	document.getElementById('threadlines_preselects').onchange = function() {
+		document.getElementById('threadlines_conditions').value = this.value;
+		document.getElementById('query_submit').click();
+	}
+	
+
+	document.getElementById('query_submit').onclick = function() {
+		console.log('query handling');
+
+		document.getElementById('stream').innerHTML = '';
+
+		var condition = document.getElementById('threadlines_conditions').value
+		console.log('condition:');
+		console.log(condition);
+
+		var matched_stories = [];
+
+		// fake news
+		// (text.match(/\Wfake news\W/))
+		// science videos
+		// type == 'video_link' && topic == 'science'
+		// vertical videos
+		// aspect == 0.56
+
+
+		for(uuid in THREADLINES)	{
+			post = THREADLINES[uuid];
+			provider = post['provider'] ? post['provider'].toLowerCase() : '';
+			aspect = post['aspect'];
+			type = post['content_type'].toLowerCase();
+			reactions = post['reaction_count'];
+			topic = post['vibe_name'].toLowerCase();
+			title = post['title'] ? post['title'].toLowerCase() : '';
+			summary = post['summary'] ? post['summary'].toLowerCase() : '';
+			text = title + ' ' + summary;
+
+			if(eval(condition)) {
+				matched_stories.push(post);
+			}
+		}
+
+		for(var i = 0; i < matched_stories.length; i++)	{
+			for(var j = i + 1; j < matched_stories.length; j++)	{
+				if(matched_stories[i].content_relative_time > matched_stories[j].content_relative_time)	{
+					tmp = matched_stories[i];
+					matched_stories[i] = matched_stories[j];
+					matched_stories[j] = tmp;
+				}
+			}
+		}
+
+		console.log('matched: ' + matched_stories.length)
+		console.log(matched_stories)
+
+		for(var i = 0; i < matched_stories.length; i++)	{
+			var post_div = document.createElement('div');
+			post_div.innerHTML = '<div class="th_topic" style="font-size: 8px">' +matched_stories[i].vibe_name + '</div>' + '<div class="th_title" style="font-size: 8px">' + matched_stories[i].content_relative_time + 'h</div>' + '<div class="th_title" style="font-size: 20px"><a href="' + matched_stories[i].content_url + '">' + matched_stories[i].title + '</a></div>' + '<div class="th_provider" style="font-size: 10px">' + matched_stories[i].provider + '</div>' + '<div class="th_summary" style="font-size: 12px">' + matched_stories[i].summary + '</div>' + '<br/><br/>';
+
+			document.getElementById('stream').appendChild(post_div);
+		}
+
+		return false;
 	}
 }
 
