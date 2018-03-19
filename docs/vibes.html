@@ -529,7 +529,7 @@ function create_vibe_card(obj) {
 				vibe_story_img.style.boxShadow = is_ntk ? '0 0 10px 0 gray' : ''; // dropp because of perf
 				vibe_story_img.style.background = 'url(' + ((is_ntk || has_vertical_thumbnail) ? post_meta.img : post_meta.imgresolutions[0].url) + ') no-repeat center center';
 				vibe_story_img.style.backgroundSize = 'cover'
-				vibe_story_img.innerHTML = is_ntk ? '<div style="display: inline-block;color: white;width: 100%;vertical-align: top;position: absolute;top: 0px;right: 0px;padding: 0 20px;text-align: right;border-radius: 10px;font-size: 75px;opacity: 0.2">' + (j + 1) + '</div>' : '';
+				vibe_story_img.innerHTML = is_ntk ? '<div style="display: inline-block;color: white;width: 100%;vertical-align: top;position: absolute;top: 0px;right: 0px;padding: 0 20px;text-align: right;border-radius: 10px;font-size: 75px;opacity: 0.5; text-shadow: 0 0 10px #000">' + (j + 1) + '</div>' : '';
 				vibe_story.appendChild(vibe_story_img);
 			}
 					
