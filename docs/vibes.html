@@ -225,7 +225,7 @@ console.log('&autoreload: periodically run newvibesbot.php');
 console.log('&breaking: add a card for breaking news');
 console.log('&useweblinks: link to www articles instead of newsroom posts');
 console.log('&multinav: profile / home / explore');
-console.log('&ntk: use a special ntk template; else it looks the same');
+console.log('&ntk: toggle the special ntk template; else it looks the same');
 console.log('-------------------');
 
 var ALL_VIBES = [];
@@ -266,6 +266,7 @@ var SECONDARY_COLORS = [
 ];
 var CARDSTREAM_SCROLL_THROTTLER = 0;
 var DEFAULT_NUM_STORIES_PER_CARD = 4;
+var DEFAULT_NUM_MERCHANDISED_VIBES = 8;
 
 document.addEventListener("DOMContentLoaded", function(event) {
 	// asked to clear out storage?
@@ -446,7 +447,7 @@ function create_vibe_card(obj) {
 	var theme_color = COLORS[vibe_id.charCodeAt(1) % COLORS.length];
 	var secondary_color = SECONDARY_COLORS[vibe_id.charCodeAt(1) % COLORS.length];
 
-	var is_ntk = vibe_id == '@NTKVIDEO' && (window.location.href.indexOf('ntk') > -1);
+	var is_ntk = vibe_id == '@NTKVIDEO' && (window.location.href.indexOf('ntk') == -1);
 	var is_mega = (vibe_id == '@MEGASTREAMVIDEO') || (vibe_id == '@MEGASTREAM');
 
 	var vibe_card = create_cardstream_card_shell();
@@ -598,9 +599,9 @@ function create_vibe_card(obj) {
 
 			// hide the leftovers until they hit read more
 			if(
-				(is_ntk && j > (DEFAULT_NUM_STORIES_PER_CARD -1)) // show 3 items in NTK
+				(is_ntk && j > (DEFAULT_NUM_STORIES_PER_CARD - 2)) // show 3 items in NTK
 				|| 
-				(!is_ntk && j > (DEFAULT_NUM_STORIES_PER_CARD -1)) // show 3 items in other cards
+				(!is_ntk && j > (DEFAULT_NUM_STORIES_PER_CARD - 1)) // show 3 items in other cards
 			) {
 				vibe_story.style.display = 'none';
 			}
@@ -653,7 +654,7 @@ function create_vibe_card(obj) {
 			vibe_card_unsubscribe_button.vibe_id = vibe_id;
 			vibe_card_unsubscribe_button.onclick = function() {
 				// update followed vibes
-				var vibes = JSON.parse(localStorage.getItem('myvibes')) || {};
+				var vibes = JSON.parse(localStorage.getItem('myvibes')) || {'a4e6cc20-f784-3169-8d99-2e22d369a550':1};
 				delete vibes[this.vibe_id];
 				localStorage.setItem('myvibes', JSON.stringify(vibes));
 				
@@ -827,7 +828,7 @@ function jsonp_parse_amalgam(full_amalgam) {
 	var obj = AMALGAM.cards; // the obj we'll parse here in this function
 
 	// get followed vibes from localstorage
-	var followed_vibes = JSON.parse(localStorage.getItem('myvibes')) || {};
+	var followed_vibes = JSON.parse(localStorage.getItem('myvibes')) || {'a4e6cc20-f784-3169-8d99-2e22d369a550':1};
 
 	// styles
 	document.body.style.background = '#fff';
@@ -1102,19 +1103,25 @@ function create_cardstream_card_header_shell(header_text, theme_color, secondary
 		secondary_color = SECONDARY_COLORS[header_text.charCodeAt(0) % COLORS.length]
 	}
 
+	var card_header_container = document.createElement('div');
+	card_header_container.style.textAlign = 'center';
+
 	var card_header = document.createElement('h1');
-	card_header.innerHTML = header_text + ':';
+	card_header.innerHTML = header_text + '';
 	card_header.style.margin = '0';
 	card_header.style.display = 'inline-block'
 	card_header.style.paddingBottom = '10px'
 	card_header.style.marginBottom = '10px'
-	card_header.style.borderBottom = '0px solid gray'
-	card_header.style.borderColor = theme_color;
+	card_header.style.textAlign = 'center'
+	card_header.style.borderBottom = '3px solid gray'
+	card_header.style.borderColor = secondary_color;
 	card_header.style.background = '-webkit-linear-gradient(135deg, ' + secondary_color + ', ' + theme_color + ')';
 	card_header.style.webkitBackgroundClip = 'text';
 	card_header.style.webkitTextFillColor= 'transparent';
 
-	return card_header;
+	card_header_container.appendChild(card_header)
+
+	return card_header_container;
 }
 
 function create_suggested_vibes_card(followed_vibes) {
@@ -1180,7 +1187,7 @@ function create_suggested_vibes_card(followed_vibes) {
 
 			ui_add_vibe_card(this.vibe_id);
 
-			var vibes = JSON.parse(localStorage.getItem('myvibes')) || {};
+			var vibes = JSON.parse(localStorage.getItem('myvibes')) || {'a4e6cc20-f784-3169-8d99-2e22d369a550':1};
 			vibes[this.vibe_id] = 1;
 			localStorage.setItem('myvibes', JSON.stringify(vibes));
 		}
@@ -1188,7 +1195,7 @@ function create_suggested_vibes_card(followed_vibes) {
 		suggested_vibes.appendChild(vibe_card);
 
 		// hide more than X
-		if(merchandised_vibes > 15) {
+		if(merchandised_vibes > (DEFAULT_NUM_MERCHANDISED_VIBES -1)) {
 			vibe_card.style.display = 'none';
 		}
 		else {
@@ -1216,9 +1223,9 @@ function create_suggested_vibes_card(followed_vibes) {
 	vibe_card_more_button.style.background = 'none';
 	vibe_card_more_button.style.color = '#666';
 	vibe_card_more_button.style.padding = '10px 0px';
-	vibe_card_more_button.innerHTML = merchandised_vibes == 16 ? 'Show more' : 'That\'s all for now';
+	vibe_card_more_button.innerHTML = merchandised_vibes == DEFAULT_NUM_MERCHANDISED_VIBES ? 'Show more' : 'That\'s all for now';
 	// handler for when people ask for more
-	if(merchandised_vibes == 16) {
+	if(merchandised_vibes == DEFAULT_NUM_MERCHANDISED_VIBES) {
 		vibe_card_more_button.onclick = function() {
 			var vibe_card = this.parentNode.parentNode;
 
