@@ -1014,8 +1014,8 @@ function jsonp_parse_threadlines(threadlines_obj)	{
 	optionlist += '<option value="provider == \'last night now\' && text.indexOf(\'bachelor\') == -1">last night now, but no bachelor</option>';
 	optionlist += '<option value="text.match(/\\Wmachine learning\\W/)">machine learning</option>';
 	optionlist += '<option value="text.match(/\\Wmachine learning\\W/) || text.match(/\\Wartificial intelligence\\W/)">machine learning or artificial intelligence</option>';
-	optionlist += '<option value="!text.match(/\\Wpolitics\\W/) && topic != \'politics\' && !text.match(/\trump\/)">politics-free and trump-free news feed</option>';
-	optionlist += '<option value="(text.match(/\\Wpolitics\\W/) || topic == \'politics\') && !text.match(/\trump\/) && provider != \'yahoo news video\'">politics, no trump, no yahoo news video</option>';
+	optionlist += '<option value="!text.match(/\\Wpolitics\\W/) && topic != \'politics\' && !text.match(/trump\/)">politics-free and trump-free news feed</option>';
+	optionlist += '<option value="(text.match(/\\Wpolitics\\W/) || topic == \'politics\') && !text.match(/trump\/) && provider != \'yahoo news video\'">politics, no trump, no yahoo news video</option>';
 	optionlist += '<option value="aspect == 0.56">vertical videos</option>';
 	optionlist += '<option value="aspect == 0.56 && !text.match(/\\Wtrump\\W/)">vertical videos not about trump</option>';
 	optionlist += '<option value="aspect == 0.56 && !provider.match(/yahoo/)">vertical videos not from yahoo</option>';
@@ -1057,6 +1057,7 @@ function jsonp_parse_threadlines(threadlines_obj)	{
 			title = post['title'] ? post['title'].toLowerCase() : '';
 			summary = post['summary'] ? post['summary'].toLowerCase() : '';
 			text = title + ' ' + summary;
+			imgurl = post['img'];
 
 			if(
 				(
