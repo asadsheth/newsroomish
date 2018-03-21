@@ -456,6 +456,7 @@ function create_vibe_card(obj) {
 
 	if(selected_list.length == 0) {
 		var empty_message = document.createElement('div');
+		empty_message.textAlign = 'center';
 		empty_message.innerHTML = 'Nothing to see here lately.'
 		empty_message.style.margin = '20px 0'
 		vibe_card.appendChild(empty_message)
@@ -617,7 +618,7 @@ function create_vibe_card(obj) {
 
 	if(!is_ntk) {
 		var vibe_card_extender = document.createElement('div');
-		vibe_card_extender.style.textAlign = 'left';
+		vibe_card_extender.style.textAlign = 'center';
 		
 		var vibe_card_more_button = document.createElement('button');
 		vibe_card_more_button.style.border = 'none';
@@ -1222,7 +1223,7 @@ function create_suggested_vibes_card(followed_vibes) {
 
 	// show more?
 	var vibe_card_extender = document.createElement('div');
-	vibe_card_extender.style.textAlign = 'left';
+	vibe_card_extender.style.textAlign = 'center';
 	vibe_card_extender.style.padding = '0 10px';
 
 	
