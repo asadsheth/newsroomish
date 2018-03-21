@@ -451,6 +451,7 @@ function create_vibe_card(obj) {
 	var is_mega = (vibe_id == '@MEGASTREAMVIDEO') || (vibe_id == '@MEGASTREAM');
 
 	var vibe_card = create_cardstream_card_shell();
+	vibe_card.id = vibe_id;
 	vibe_card.appendChild(create_cardstream_card_header_shell(vibe_name, theme_color, secondary_color));
 
 	if(selected_list.length == 0) {
@@ -887,6 +888,12 @@ function jsonp_parse_amalgam(full_amalgam) {
 	// add the main cardstream to body
 	document.body.appendChild(cardstream_main);
 
+	// re-jigger the cardstream to make trending come last
+	for(var i = 0; i < cardstream_main.childNodes.length; i++) {
+		// not yet
+	}
+
+	// do left and right tabs
 	if(window.location.href.indexOf('multinav') > -1) {
 		// container for the cardstream explore
 		var cardstream_explore = document.createElement('div');
