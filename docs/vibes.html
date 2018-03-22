@@ -266,6 +266,7 @@ var SECONDARY_COLORS = [
 ];
 var CARDSTREAM_SCROLL_THROTTLER = 0;
 var DEFAULT_NUM_STORIES_PER_CARD = 4;
+var DEFAULT_NUM_STORIES_PER_NTK = 5;
 var DEFAULT_NUM_MERCHANDISED_VIBES = 8;
 
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -526,7 +527,7 @@ function create_vibe_card(obj) {
 				vibe_story_img.className = 'vibe_story_img';
 				vibe_story_img.style.borderRadius = is_ntk ? '10px' : '5px';
 				vibe_story_img.style.width = is_ntk ? '100%' : (has_comment ? '46px' : '82px');
-				vibe_story_img.style.height = is_ntk ? (Math.floor(200 + (Math.random() * 100)) + 'px') : (has_vertical_thumbnail ? (has_comment ? '84px' : '136px') : (has_comment ? '46px' : '82px'));
+				vibe_story_img.style.height = is_ntk ? (Math.floor(150 + (Math.random() * 100)) + 'px') : (has_vertical_thumbnail ? (has_comment ? '84px' : '136px') : (has_comment ? '46px' : '82px'));
 				vibe_story_img.style.margin = is_ntk ? '0px 0px 10px 0px' : '0';
 				vibe_story_img.style.marginLeft = is_ntk ? '' : '';
 				vibe_story_img.style.boxShadow = is_ntk ? '0 0 10px 0 gray' : ''; // dropp because of perf
@@ -601,9 +602,9 @@ function create_vibe_card(obj) {
 
 			// hide the leftovers until they hit read more
 			if(
-				(is_ntk && j > (DEFAULT_NUM_STORIES_PER_CARD - 2)) // show 3 items in NTK
+				(is_ntk && j > (DEFAULT_NUM_STORIES_PER_NTK)) // show X items in NTK
 				|| 
-				(!is_ntk && j > (DEFAULT_NUM_STORIES_PER_CARD - 1)) // show 3 items in other cards
+				(!is_ntk && j > (DEFAULT_NUM_STORIES_PER_CARD - 1)) // show Y items in other cards
 			) {
 				vibe_story.style.display = 'none';
 			}
