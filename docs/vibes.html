@@ -551,7 +551,7 @@ function create_vibe_card(obj) {
 			vibe_story_title.style.fontSize = is_ntk ? '30px' : has_vertical_thumbnail ? (has_comment ? '14px' : '24px') : (has_comment ? '13px' : '15px');
 			vibe_story_title.style.fontWeight = is_ntk ? 'bold' : 'normal';
 			vibe_story_title.style.color = is_ntk ? 'white' : (has_comment ? '#444' : '#222');
-			vibe_story_title.style.webkitLineClamp = has_vertical_thumbnail ? '4' : (has_comment ? '2' : '3');
+			vibe_story_title.style.webkitLineClamp = is_ntk ? '3' : (has_vertical_thumbnail ? '4' : (has_comment ? '2' : '3'));
 			vibe_story_title.style.display = '-webkit-box';
 			vibe_story_title.style.overflow = 'hidden';
 			vibe_story_title.style.webkitBoxOrient= 'vertical';
