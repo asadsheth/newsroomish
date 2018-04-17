@@ -539,12 +539,12 @@ function create_vibe_card(obj) {
 					
 			var vibe_story_provider = document.createElement('div');
 			vibe_story_provider.style.display = 'inline-block'
-			vibe_story_provider.style.fontSize = '10px'
-			vibe_story_provider.innerHTML = post_meta.provider;
+			vibe_story_provider.style.fontSize = '12px'
+			vibe_story_provider.innerHTML = post_meta.provider_image ? ('<img style="height: 12px; position: relative; top: 1px" src="' + post_meta.provider_image + '"/>') + '&nbsp; ' + post_meta.provider : post_meta.provider;
 
 			var vibe_story_timestamp = document.createElement('div');
 			vibe_story_timestamp.style.display = 'inline-block'
-			vibe_story_timestamp.style.fontSize = '10px'
+			vibe_story_timestamp.style.fontSize = '12px'
 			vibe_story_timestamp.innerHTML = '&nbsp; &bull; ' + (post_meta.content_relative_time == 0 ? ('<font style="color: red">new</font>') : (post_meta.content_relative_time > 23) ? (Math.floor(post_meta.content_relative_time / 24) + 'd') : (post_meta.content_relative_time + 'h')) + (vibe_story.url.indexOf('yahoo.com') == -1 ? '&nbsp; &bull; &nbsp; &rarr;' : '');
 
 			var vibe_story_title = document.createElement('div');
