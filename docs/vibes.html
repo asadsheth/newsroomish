@@ -231,6 +231,7 @@ console.log('-------------------');
 var ALL_VIBES = [];
 var AMALGAM = [];
 var THREADLINES = {};
+var DEFAULT_FOLLOWED_VIBES = {'a4e6cc20-f784-3169-8d99-2e22d369a550':1};
 
 var COLORS = [
     'darkred',
@@ -268,44 +269,6 @@ var CARDSTREAM_SCROLL_THROTTLER = 0;
 var DEFAULT_NUM_STORIES_PER_CARD = 4;
 var DEFAULT_NUM_STORIES_PER_NTK = 5;
 var DEFAULT_NUM_MERCHANDISED_VIBES = 8;
-
-document.addEventListener("DOMContentLoaded", function(event) {
-	// asked to clear out storage?
-	if(window.location.href.indexOf('clearlocalstorage') > -1)	{
-		localStorage.clear();
-	}
-
-	// looking at full comment list?
-	if(window.location.href.indexOf('allcomments') > -1)	{
-		document.body.innerHTML = '';
-
-		console.log('fetching allcomments')
-		var scr = document.createElement('script');
-		scr.src = 'caches/c_allvibes.jsonp';
-		document.head.appendChild(scr);
-	}
-	// special prototype for card streams?
-	else if(window.location.href.indexOf('cardstream') > -1) {
-		document.body.innerHTML = '';
-
-		console.log('config: cardstream');
-		var scr = document.createElement('script');
-		scr.src = 'caches/amalgam.jsonp?rand=' + Math.random();
-		document.head.appendChild(scr);
-	}
-	else if(window.location.href.indexOf('threadlines') > -1) {
-		document.body.innerHTML = '';
-
-		console.log('config: threadlines');
-		var scr = document.createElement('script');
-		scr.src = 'caches/threadlines.jsonp?rand=' + Math.random();
-		document.head.appendChild(scr);
-	}
-	else {
-		// just get the list of vibes we've got, we'll figure out what we're doing after
-		load_vibe_list();
-	}
-});
 
 // this creates a first level user prompt (i.e. the thing that starts the convo?) dom object
 var create_prompt = function(prompt_obj, theme_color) {
@@ -657,7 +620,7 @@ function create_vibe_card(obj) {
 			vibe_card_unsubscribe_button.vibe_id = vibe_id;
 			vibe_card_unsubscribe_button.onclick = function() {
 				// update followed vibes
-				var vibes = JSON.parse(localStorage.getItem('myvibes')) || {'a4e6cc20-f784-3169-8d99-2e22d369a550':1};
+				var vibes = JSON.parse(localStorage.getItem('myvibes')) || DEFAULT_FOLLOWED_VIBES;
 				delete vibes[this.vibe_id];
 				localStorage.setItem('myvibes', JSON.stringify(vibes));
 				
@@ -831,7 +794,7 @@ function jsonp_parse_amalgam(full_amalgam) {
 	var obj = AMALGAM.cards; // the obj we'll parse here in this function
 
 	// get followed vibes from localstorage
-	var followed_vibes = JSON.parse(localStorage.getItem('myvibes')) || {'a4e6cc20-f784-3169-8d99-2e22d369a550':1};
+	var followed_vibes = JSON.parse(localStorage.getItem('myvibes')) || DEFAULT_FOLLOWED_VIBES;
 
 	// styles
 	document.body.style.background = '#fff';
@@ -1198,7 +1161,7 @@ function create_suggested_vibes_card(followed_vibes) {
 
 			ui_add_vibe_card(this.vibe_id);
 
-			var vibes = JSON.parse(localStorage.getItem('myvibes')) || {'a4e6cc20-f784-3169-8d99-2e22d369a550':1};
+			var vibes = JSON.parse(localStorage.getItem('myvibes')) || DEFAULT_FOLLOWED_VIBES;
 			vibes[this.vibe_id] = 1;
 			localStorage.setItem('myvibes', JSON.stringify(vibes));
 		}
@@ -1368,6 +1331,44 @@ if(
 	console.log('starting autoreloads');
 	setTimeout(reload_backend, RELOAD_FREQ * 60000);
 }
+// void "main"
+document.addEventListener("DOMContentLoaded", function(event) {
+	// asked to clear out storage?
+	if(window.location.href.indexOf('clearlocalstorage') > -1)	{
+		localStorage.clear();
+	}
+
+	// looking at full comment list?
+	if(window.location.href.indexOf('allcomments') > -1)	{
+		document.body.innerHTML = '';
+
+		console.log('fetching allcomments')
+		var scr = document.createElement('script');
+		scr.src = 'caches/c_allvibes.jsonp';
+		document.head.appendChild(scr);
+	}
+	// special prototype for card streams?
+	else if(window.location.href.indexOf('cardstream') > -1) {
+		document.body.innerHTML = '';
+
+		console.log('config: cardstream');
+		var scr = document.createElement('script');
+		scr.src = 'caches/amalgam.jsonp?rand=' + Math.random();
+		document.head.appendChild(scr);
+	}
+	else if(window.location.href.indexOf('threadlines') > -1) {
+		document.body.innerHTML = '';
+
+		console.log('config: threadlines');
+		var scr = document.createElement('script');
+		scr.src = 'caches/threadlines.jsonp?rand=' + Math.random();
+		document.head.appendChild(scr);
+	}
+	else {
+		// just get the list of vibes we've got, we'll figure out what we're doing after
+		load_vibe_list();
+	}
+});
 </script>
 
 </html>
