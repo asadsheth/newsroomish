@@ -35,7 +35,7 @@
 	box-sizing: border-box;
 }
 html {
-	overflow-x: hidden;
+	/*overflow-x: hidden;*/
 }
 body{
 	color: #222;
@@ -1411,20 +1411,36 @@ function frequency_tracker_message()	{
 		message_div.style.borderRadius = '5px';
 		message_div.style.opacity = '0';
 		message_div.style.transitionDuration = '0.5s';
-		message_div.innerHTML = 'welcome to newsroomish!<br/><br/>get all you need to know right up here at the top, and scroll down to see what specific storylines you should be keeping up to date on. follow them to get updates!';
+		message_div.style.transform = 'scale(0.1)';
+		message_div.innerHTML = message_to_show + '<div style="font-size: 6px; margin-top: 6px">scroll to dismiss this message</div>';
 
 		document.body.appendChild(message_div);
 
 		setTimeout(function() {
 			document.getElementById('message_div').style.opacity = 1;
-		}, 1);		
+			document.getElementById('message_div').style.transform = 'scale(1)';
+		}, 1);
+
+		window.setTimeout(message_clearer, 1000)
 	}
 
 	if(visits_thismonth == 0)	{
-		show_message('welcome to newsroomish!<br/><br/>get all you need to know right up here at the top, and scroll down to see what specific storylines you should be keeping up to date on. follow them to get updates!<br/><div style="font-size: 6px">scroll to dismiss this message</div>');
+		show_message('welcome to newsroomish!<br/><br/>get just what you need to know right up here at the top, and then keep going down to get more news.<br/><br/>if you\'re feeling daring, follow a storyline to get updates on it every time you come back. don\'t worry, you can always unfollow!<br/>');
 	}
 }
-setTimeout(frequency_tracker_message, 1000)
+
+// this next function clears messages once you scroll
+var message_clearer = function() {
+	if(!document.getElementById('message_div')) return;
+
+	if(document.body.scrollTop == 0) {
+		window.setTimeout(message_clearer, 1000);
+	}
+	else {
+		document.getElementById('message_div').style.opacity = '0';
+	}
+}
+
 // void "main"
 document.addEventListener("DOMContentLoaded", function(event) {
 	// asked to clear out storage?
