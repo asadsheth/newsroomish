@@ -1396,7 +1396,9 @@ console.log(FREQUENCY_LOG);
 
 // messaginng system
 function frequency_tracker_message()	{
-	var visits_today = FREQUENCY_LOG['in the last day'];
+	// all these are NOT INCLUDING THIS VISIT
+	var visits_thisday = FREQUENCY_LOG['in the last day'];
+	var visits_thisweek = FREQUENCY_LOG['in the last week'];
 	var visits_thismonth = FREQUENCY_LOG['in the last month'];
 
 	var show_message = function(message_to_show) {
@@ -1430,6 +1432,16 @@ function frequency_tracker_message()	{
 	if(visits_thismonth == 0)	{
 		show_message('welcome to newsroomish!<br/><br/>get just what you need to know right up here at the top, and then keep going down to get more news.<br/><br/>if you\'re feeling daring, follow a storyline to get updates on it every time you come back. don\'t worry, you can always unfollow!<br/>');
 	}
+	else if(visits_thisday == 0)	{
+		show_message('good for you, checking in today! enjoy your taste of the top stories.');		
+	}
+	else if(visits_thisday == 2)	{
+		show_message('wow, you\'re staying really informed! you\'ve checked in more than ' + (Math.floor(Math.random() * 50) + 50) + '% of the newsroomish audience today. keep it up!');		
+	}
+	else if(visits_thisday == 4)	{
+		show_message('wow, you\'re staying really informed! you\'ve checked in more than ' + (Math.floor(Math.random() * 30) + 70) + '% of the newsroomish audience today. keep it up!');		
+	}
+	else if(visits_thisweek == )
 	else if(window.location.href.indexOf('force_message') > -1) {
 		show_message('forced message here');
 	}
