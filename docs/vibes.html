@@ -1392,23 +1392,39 @@ FREQUENCY_LOG = frequency_tracker_update();
 console.log(FREQUENCY_LOG);
 
 // messaginng system
-function frequency_tracker_message(freq_log)	{
-	var visits_today = freq_log['in the last day'];
-	var visits_thismonth = freq_log['in the last month'];
+function frequency_tracker_message()	{
+	var visits_today = FREQUENCY_LOG['in the last day'];
+	var visits_thismonth = FREQUENCY_LOG['in the last month'];
 
-	if(visits_thismonth == 0)	{
+	var show_message = function(message_to_show) {
 		var message_div = document.createElement('div');
+		message_div.id = 'message_div';
 		message_div.style.position = 'fixed';
 		message_div.style.bottom = '0';
 		message_div.style.left = '0';
-		message_div.style.width = '100%';
-		message_div.innerHTML = 'first time here? welcome!'
+		message_div.style.width = '90%';
+		message_div.style.margin = '5%';
+		message_div.style.padding = '10px';
+		message_div.style.boxShadow = '0 0 10px 0 #ccc';
+		message_div.style.boxSizing = 'border-box';
+		message_div.style.background = 'lightgreen';
+		message_div.style.borderRadius = '5px';
+		message_div.style.opacity = '0';
+		message_div.style.transitionDuration = '0.5s';
+		message_div.innerHTML = 'welcome to newsroomish!<br/><br/>get all you need to know right up here at the top, and scroll down to see what specific storylines you should be keeping up to date on. follow them to get updates!';
 
 		document.body.appendChild(message_div);
+
+		setTimeout(function() {
+			document.getElementById('message_div').style.opacity = 1;
+		}, 1);		
+	}
+
+	if(visits_thismonth == 0)	{
+		show_message('welcome to newsroomish!<br/><br/>get all you need to know right up here at the top, and scroll down to see what specific storylines you should be keeping up to date on. follow them to get updates!<br/><div style="font-size: 6px">scroll to dismiss this message</div>');
 	}
 }
-frequency_tracker_message(FREQUENCY_LOG);
-
+setTimeout(frequency_tracker_message, 1000)
 // void "main"
 document.addEventListener("DOMContentLoaded", function(event) {
 	// asked to clear out storage?
