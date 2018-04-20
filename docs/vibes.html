@@ -228,11 +228,12 @@ console.log('&multinav: profile / home / explore');
 console.log('&ntk: toggle the special ntk template; else it looks the same');
 console.log('-------------------');
 
+// holder global vars that will be used for stuff inside functions
 var ALL_VIBES = [];
 var AMALGAM = [];
 var THREADLINES = {};
-var DEFAULT_FOLLOWED_VIBES = {'a4e6cc20-f784-3169-8d99-2e22d369a550':1};
 
+// cfg globals
 var COLORS = [
     'darkred',
     'rebeccapurple',
@@ -269,6 +270,11 @@ var CARDSTREAM_SCROLL_THROTTLER = 0;
 var DEFAULT_NUM_STORIES_PER_CARD = 4;
 var DEFAULT_NUM_STORIES_PER_NTK = 5;
 var DEFAULT_NUM_MERCHANDISED_VIBES = 8;
+var RELOAD_FREQ = 10; // in minutes
+var DEFAULT_FOLLOWED_VIBES = {'a4e6cc20-f784-3169-8d99-2e22d369a550':1};
+
+// visit history tracker
+var VISIT_HISTORY = localStorage.getItem('visithistory') || [];
 
 // this creates a first level user prompt (i.e. the thing that starts the convo?) dom object
 var create_prompt = function(prompt_obj, theme_color) {
@@ -1314,7 +1320,6 @@ function jsonp_parse_posts(obj) {
 }
 
 // function for auto refreshing the backend
-var RELOAD_FREQ = 10; // in minutes
 var reload_backend = function() {
 	console.log('starting backend reload');
 	var scr_elem = document.createElement('script');
@@ -1324,13 +1329,45 @@ var reload_backend = function() {
 	// call me again in RELOAD_FREQ minutes
 	setTimeout(reload_backend, RELOAD_FREQ * 60000);
 }
-// fire the auto-reloader?
+// start the autoreloader if it's been requested
 if(
 	window.location.href.indexOf('autoreload') > -1
 ) {
 	console.log('starting autoreloads');
 	setTimeout(reload_backend, RELOAD_FREQ * 60000);
 }
+
+// user frequency tracker
+// VISIT_HISTORY.push()
+function frequency_tracker_update() {
+	var now = console.log(Math.floor(new Date().getTime() / 1000));
+
+	var last_day = 0;
+	var last_week = 0;
+	var last_month = 0;
+	
+	for(var i = 0; i < VISIT_HISTORY.length; i++)	{
+		var old_timestamp = VISIT_HISTORY[i];
+
+		if((now - old_timestamp) < (60 * 60 * 24))	{
+			last_day++;
+		}
+		else if((now - old_timestamp) < (60 * 60 * 24 * 7))	{
+			last_week++;
+		}
+		else if((now - old_timestamp) < (60 * 60 * 24 * 30))	{
+			last_month++;
+		}
+	}
+
+	console.log('last day visits: ' + last_day);
+	console.log('last week visits: ' + last_week);
+	console.log('last month visits: ' + last_month);
+
+	// localstorage.setItem('')
+}
+frequency_tracker_update();
+
 // void "main"
 document.addEventListener("DOMContentLoaded", function(event) {
 	// asked to clear out storage?
