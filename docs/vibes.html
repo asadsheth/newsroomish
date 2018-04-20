@@ -274,7 +274,7 @@ var RELOAD_FREQ = 10; // in minutes
 var DEFAULT_FOLLOWED_VIBES = {'a4e6cc20-f784-3169-8d99-2e22d369a550':1};
 
 // visit history tracker
-var VISIT_HISTORY = localStorage.getItem('visithistory') || [];
+var VISIT_HISTORY = JSON.parse(localStorage.getItem('visithistory')) || [];
 
 // this creates a first level user prompt (i.e. the thing that starts the convo?) dom object
 var create_prompt = function(prompt_obj, theme_color) {
@@ -1340,16 +1340,22 @@ if(
 // user frequency tracker
 // VISIT_HISTORY.push()
 function frequency_tracker_update() {
-	var now = console.log(Math.floor(new Date().getTime() / 1000));
+	var now = Math.floor(new Date().getTime() / 1000);
 
+	var last_minute = 0;
 	var last_day = 0;
 	var last_week = 0;
 	var last_month = 0;
 	
+	console.log(VISIT_HISTORY);
+
 	for(var i = 0; i < VISIT_HISTORY.length; i++)	{
 		var old_timestamp = VISIT_HISTORY[i];
 
-		if((now - old_timestamp) < (60 * 60 * 24))	{
+		if((now - old_timestamp) < (60))	{
+			last_minute++;
+		}
+		else if((now - old_timestamp) < (60 * 60 * 24))	{
 			last_day++;
 		}
 		else if((now - old_timestamp) < (60 * 60 * 24 * 7))	{
@@ -1360,13 +1366,22 @@ function frequency_tracker_update() {
 		}
 	}
 
-	console.log('last day visits: ' + last_day);
-	console.log('last week visits: ' + last_week);
-	console.log('last month visits: ' + last_month);
+	// add this visit to the log
+	VISIT_HISTORY.push(now);
 
 	// localstorage.setItem('')
+	localStorage.setItem('visithistory', JSON.stringify(VISIT_HISTORY));
+
+	var freq_log = ({
+		'minute' : last_minute,
+		// 'hour' : last_hour,
+		'day' : last_day,
+		'week' : last_week,
+		'month' : last_month
+	});
 }
-frequency_tracker_update();
+FREQUENCY_LOG = frequency_tracker_update();
+console.log(FREQUENCY_LOG);
 
 // void "main"
 document.addEventListener("DOMContentLoaded", function(event) {
