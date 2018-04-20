@@ -1439,9 +1439,17 @@ function frequency_tracker_message()	{
 		show_message('wow, you\'re staying really informed! you\'ve checked in more than ' + (Math.floor(Math.random() * 50) + 50) + '% of the newsroomish audience today. keep it up!');		
 	}
 	else if(visits_thisday == 4)	{
-		show_message('wow, you\'re staying really informed! you\'ve checked in more than ' + (Math.floor(Math.random() * 30) + 70) + '% of the newsroomish audience today. keep it up!');		
+		show_message('you just keep coming back for more! you\'ve checked in more than ' + (Math.floor(Math.random() * 30) + 70) + '% of the newsroomish audience today. keep it up!');		
 	}
-	else if(visits_thisweek == )
+	else if(visits_thisweek == 0)	{
+		show_message('welcome back! we\'ve missed you. more than ' + (Math.floor(Math.random() * 50) + 50) + '% of the newsroomish audience has showed up since the last time we saw you. go ahead and get caught up on your news now, and don\'t be such a stranger!');				
+	}
+	else if(visits_thisweek == 6)	{
+		show_message('welcome back! you\'re getting to be a regular around here. check out the big brains on you!');				
+	}
+	else if(visits_thisweek == 12)	{
+		show_message('daaaaaaaaaamn you on fire! we\'ve seen you more than ' + (Math.floor(Math.random() * 50) + 50) + '% of the audience in the last week! keep up the good work.');				
+	}
 	else if(window.location.href.indexOf('force_message') > -1) {
 		show_message('forced message here');
 	}
