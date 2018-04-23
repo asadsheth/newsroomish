@@ -1376,7 +1376,9 @@ function frequency_tracker_update() {
 	VISIT_HISTORY.push(now);
 
 	// truncate visit history to 100 visits
-	if(VISIT_HISTORY.length > 100) VISIT_HISTORY.shift();
+	while(VISIT_HISTORY.length > 100) {
+		VISIT_HISTORY.shift()
+	};
 
 	// localstorage.setItem('')
 	localStorage.setItem('visithistory', JSON.stringify(VISIT_HISTORY));
