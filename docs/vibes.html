@@ -556,6 +556,9 @@ function create_vibe_card(obj) {
 				vibe_story_meta.style.borderRadius = '10px';
 				vibe_story_img.appendChild(vibe_story_meta);
 
+				var vibe_sourcing = document.createElement('div');
+
+
 			} else {
 				vibe_story_meta.appendChild(vibe_story_provider)
 				vibe_story_meta.appendChild(vibe_story_timestamp)
@@ -1087,7 +1090,7 @@ function create_cardstream_card_header_shell(header_text, theme_color, secondary
 	}
 
 	var card_header_container = document.createElement('div');
-	card_header_container.style.textAlign = 'center';
+	card_header_container.style.textAlign = 'left';
 
 	var card_header = document.createElement('h1');
 	card_header.innerHTML = header_text + '';
@@ -1095,8 +1098,8 @@ function create_cardstream_card_header_shell(header_text, theme_color, secondary
 	card_header.style.display = 'inline-block'
 	card_header.style.paddingBottom = '10px'
 	card_header.style.marginBottom = '10px'
-	card_header.style.textAlign = 'center'
-	card_header.style.borderBottom = '5px solid gray'
+	card_header.style.textAlign = 'left'
+	card_header.style.borderBottom = '0px solid gray'
 	card_header.style.borderColor = secondary_color;
 	card_header.style.background = '-webkit-linear-gradient(135deg, ' + secondary_color + ', ' + theme_color + ')';
 	card_header.style.webkitBackgroundClip = 'text';
