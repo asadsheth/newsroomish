@@ -644,7 +644,19 @@ function create_vibe_card(obj) {
 
 		vibe_card.appendChild(vibe_card_extender);
 
-	}	
+	}
+
+	// add friction
+	if(is_ntk)	{
+		var friction = document.createElement('div');
+		friction.style.margin = '50px -10px 0 -10px';
+		friction.style.padding = '20px';
+		friction.style.background = 'green';
+		friction.style.color = 'white';
+		friction.innerHTML = '<h1 style="margin: 0 0 10px 0">Did you know?</h1><p>85% of statistics about people spending too much time on their phone are totally made up?</p><p>OK fine, that one\'s made up too, but still - you\'re all caught up! You can come back in the evening to get another dose of the news from every angle.</p>';
+
+		vibe_card.appendChild(friction);
+	}
 
 	return vibe_card;	
 }
