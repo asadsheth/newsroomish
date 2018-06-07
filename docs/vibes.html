@@ -662,7 +662,7 @@ function create_vibe_card(obj) {
 	if(is_ntk)	{
 		var friction = document.createElement('div');
 		friction.style.margin = '50px -10px 0 -10px';
-		friction.style.padding = '20px';
+		friction.style.padding = '50px';
 		friction.style.background = 'green';
 		friction.style.color = 'white';
 		friction.innerHTML = '<h1 style="margin: 0 0 10px 0">Did you know?</h1><p>85% of statistics about people spending too much time on their phone are totally made up?</p><p>OK fine, that one\'s made up too, but still - you\'re all caught up! You can come back in the evening to get another dose of the news from every angle.</p>';
@@ -866,7 +866,9 @@ function jsonp_parse_amalgam(full_amalgam) {
 			breaking_card.style.boxShadow = '0 0 10px 0 gray';
 			breaking_card.innerHTML = '<div style="background: linear-gradient(135deg, red, darkorange); padding: 10px 20px 10px 10px; margin-left: -10px; margin-bottom: 10px; display: inline-block; border-radius: 0 10px 10px 0; color: white; font-weight: bold; text-shadow: 1px 1px 10px black">' + obj[i].heading + '</div>' + '<div style="font-size: 18px; color: white; text-shadow: 1px 1px 10px black">' + obj[i].msg + '</div>';
 			// for now, only append when explicitly requested
-			if(window.location.href.indexOf('breaking') > -1) cardstream_main.appendChild(breaking_card);
+			if(
+				true ||
+				window.location.href.indexOf('breaking') > -1) cardstream_main.appendChild(breaking_card);
 		}
 		else if(
 			is_ntk
