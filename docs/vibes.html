@@ -496,11 +496,11 @@ function create_vibe_card(obj) {
 				vibe_story_img.className = 'vibe_story_img';
 				vibe_story_img.style.borderRadius = is_ntk ? '10px' : '5px';
 				vibe_story_img.style.width = is_ntk ? '100%' : (has_comment ? '46px' : '82px');
-				vibe_story_img.style.height = is_ntk ? (Math.floor(250 + (Math.random() * 100)) + 'px') : (has_vertical_thumbnail ? (has_comment ? '84px' : '136px') : (has_comment ? '46px' : '82px'));
+				vibe_story_img.style.height = is_ntk ? (Math.floor(180 + (Math.random() * 100)) + 'px') : (has_vertical_thumbnail ? (has_comment ? '84px' : '136px') : (has_comment ? '46px' : '82px'));
 				vibe_story_img.style.margin = is_ntk ? '0px 0px 10px 0px' : '0';
 				vibe_story_img.style.marginLeft = is_ntk ? '' : '';
 				vibe_story_img.style.boxShadow = is_ntk ? '0 0 10px 0 gray' : ''; // dropp because of perf
-				vibe_story_img.style.background = 'url(' + ((is_ntk || has_vertical_thumbnail) ? post_meta.img : post_meta.imgresolutions[0].url) + ') no-repeat center center';
+				vibe_story_img.style.background = 'url(' + ((is_ntk || has_vertical_thumbnail) ? post_meta.img : post_meta.imgresolutions[0].url) + ') no-repeat center 25%';
 				vibe_story_img.style.backgroundSize = 'cover'
 				vibe_story_img.innerHTML = is_ntk ? '<div style="display: inline-block;color: white;width: 100%;vertical-align: top;position: absolute;top: 0px;right: 0px;padding: 0 20px;text-align: right;border-radius: 10px;font-size: 75px;opacity: 0.5; text-shadow: 0 0 10px #000">' + (j + 1) + '</div>' : '';
 				vibe_story.appendChild(vibe_story_img);
@@ -844,7 +844,7 @@ function jsonp_parse_amalgam(full_amalgam) {
 			var	breaking_card = document.createElement('div');
 			breaking_card.style.fontSize = '36px';
 			breaking_card.style.position = 'relative';
-			breaking_card.style.padding = '100% 10px 50px 10px';
+			breaking_card.style.padding = '50% 10px 50px 10px';
 			breaking_card.style.color = 'white';
 			breaking_card.style.background = 'url(https://s.yimg.com/uu/api/res/1.2/wqnJSfOfa3viHAaifQUa7g--~B/Zmk9c3RyaW07aD0zODg7cHlvZmY9MDtxPTk1O3c9NzIwO3NtPTE7YXBwaWQ9eXRhY2h5b24-/https://media.zenfs.com/creatr-images/GLB/2017-12-20/c6510710-e5c0-11e7-970f-75cc8c9abb98_image-9208.cf.webp)';
 			breaking_card.style.backgroundSize = 'cover';
@@ -870,6 +870,8 @@ function jsonp_parse_amalgam(full_amalgam) {
 
 	// now paint the suggested vibes carousel
 	cardstream_main.appendChild(create_suggested_vibes_card(followed_vibes));
+
+	// TODO now add suggested vibes to be followed
 
 	// add the main cardstream to body
 	document.body.appendChild(cardstream_main);
@@ -1109,7 +1111,7 @@ function create_cardstream_card_header_shell(header_text, theme_color, secondary
 	card_header.style.margin = '0';
 	card_header.style.display = 'inline-block'
 	card_header.style.paddingBottom = '10px'
-	card_header.style.marginBottom = '10px'
+	card_header.style.marginBottom = '0px'
 	card_header.style.fontSize = '40px'
 	card_header.style.textAlign = 'left'
 	card_header.style.borderBottom = '0px solid gray'
