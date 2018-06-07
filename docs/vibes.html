@@ -496,13 +496,13 @@ function create_vibe_card(obj) {
 				vibe_story_img.className = 'vibe_story_img';
 				vibe_story_img.style.borderRadius = is_ntk ? '10px' : '5px';
 				vibe_story_img.style.width = is_ntk ? '100%' : (has_comment ? '46px' : '82px');
-				vibe_story_img.style.height = is_ntk ? (Math.floor(180 + (Math.random() * 100)) + 'px') : (has_vertical_thumbnail ? (has_comment ? '84px' : '136px') : (has_comment ? '46px' : '82px'));
+				vibe_story_img.style.height = is_ntk ? (Math.floor(200 + (Math.random() * 100)) + 'px') : (has_vertical_thumbnail ? (has_comment ? '84px' : '136px') : (has_comment ? '46px' : '82px'));
 				vibe_story_img.style.margin = is_ntk ? '0px 0px 10px 0px' : '0';
 				vibe_story_img.style.marginLeft = is_ntk ? '' : '';
 				vibe_story_img.style.boxShadow = is_ntk ? '0 0 10px 0 gray' : ''; // dropp because of perf
 				vibe_story_img.style.background = 'url(' + ((is_ntk || has_vertical_thumbnail) ? post_meta.img : post_meta.imgresolutions[0].url) + ') no-repeat center 25%';
 				vibe_story_img.style.backgroundSize = 'cover'
-				vibe_story_img.innerHTML = is_ntk ? '<div style="display: inline-block;color: white;width: 100%;vertical-align: top;position: absolute;top: -50px;right: 0px;padding: 0 20px;text-align: right;border-radius: 10px;font-size: 75px;opacity: 0.75; text-shadow: 0 0 10px #000">' + (j + 1) + '</div>' : '';
+				vibe_story_img.innerHTML = is_ntk ? '<div style="display: inline-block;color: ' + 'white' + ';width: 100%;vertical-align: top;position: absolute;top: -50px;right: 0px;padding: 0 20px;text-align: right;border-radius: 10px;font-size: 75px;opacity: 0.75; text-shadow: 0 0 10px #000">' + (j + 1) + '</div>' : '';
 				vibe_story.appendChild(vibe_story_img);
 			}
 					
