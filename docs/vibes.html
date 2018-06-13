@@ -567,6 +567,7 @@ function create_vibe_card(obj) {
 				vibe_story.appendChild(vibe_story_temperature);
 
 				var vibe_substories = document.createElement('div');
+				vibe_substories.style.marginBottom = '40px';
 				var substory_string = '';
 				for(var k = 0; k < 3 - TEMPERATURE_INDEX; k++)	{
 					substory_string += '<div class="cardstream_vibe_story" style="margin: 20px 0px; position: relative;"><div class="vibe_story_img" style="display: inline-block; border-radius: 5px; width: 82px; height: 82px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; background: gray center 25% / cover no-repeat;"></div><div style="padding-left: 10px; display: inline-block; color: rgb(170, 170, 170); width: 70%; vertical-align: top;"><div style="display: inline-block; font-size: 12px;"><img style="height: 12px; position: relative; top: 1px" src="http://l.yimg.com/os/152/2012/04/21/image001-png_162613.png"></div><div style="display: inline-block; font-size: 12px;">&nbsp; &bull; <font style="">' + Math.floor(Math.random() * 8 + 1) + 'h</font></div><div style="font-size: 15px; font-weight: normal; color: rgb(34, 34, 34); -webkit-line-clamp: 3; display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical;">Lorem ipsum dolor amet sil lorem ipsum dolor amet sil</div><div style="font-size: 10px; margin: 5px 0px; color: midnightblue;"></div></div></div>';
@@ -669,7 +670,7 @@ function create_vibe_card(obj) {
 		friction.style.padding = '150px 50px';
 		friction.style.background = 'green';
 		friction.style.color = 'white';
-		friction.innerHTML = '<h1 style="margin: 0 0 10px 0">Did you know?</h1><p>85% of statistics about people spending too much time on their phone are totally made up?</p><p>OK fine, that one\'s made up too, but still - you\'re all caught up! You can come back in the evening to get another dose of the news from every angle.</p><p>Still hungry for more? Keep scrolling!</p>';
+		friction.innerHTML = '<h1 style="margin: 0 0 10px 0">Did you know?</h1><p>On this day in history, June 11, Troy was sacked and burned?</p><p>On June 11, 1776, the Continental Congress created a committee to draft the Declaration of Independence?</p><p>That\'s all for the top stories. Still hungry for more? Keep scrolling!</p>';
 
 		vibe_card.appendChild(friction);
 	}
