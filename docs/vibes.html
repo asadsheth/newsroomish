@@ -502,7 +502,7 @@ function create_vibe_card(obj) {
 				vibe_story_img.style.boxShadow = is_ntk ? '0 0 10px 0 gray' : ''; // dropp because of perf
 				vibe_story_img.style.background = 'url(' + ((is_ntk || has_vertical_thumbnail) ? post_meta.img : post_meta.imgresolutions[0].url) + ') no-repeat center 25%';
 				vibe_story_img.style.backgroundSize = 'cover'
-				vibe_story_img.innerHTML = is_ntk ? '<div style="display: inline-block;color: ' + 'white' + ';width: 100%;vertical-align: top;position: absolute;top: -50px;right: 0px;padding: 0 20px;text-align: right;border-radius: 10px;font-size: 75px;opacity: 0.75; text-shadow: 0 0 10px #000">' + (j + 1) + '</div>' : '';
+				vibe_story_img.innerHTML = is_ntk ? '<div style="display: inline-block;color: ' + 'white' + ';width: 100%;vertical-align: top;position: absolute;top: -45px;right: 0px;padding: 0 20px;text-align: right;border-radius: 10px;font-size: 75px;opacity: 0.75; text-shadow: 0 0 10px #000">' + (j + 1) + '</div>' : '';
 				vibe_story.appendChild(vibe_story_img);
 			}
 					
@@ -556,24 +556,61 @@ function create_vibe_card(obj) {
 				vibe_story_meta.style.borderRadius = '10px';
 				vibe_story_img.appendChild(vibe_story_meta);
 
-				var TEMPERATURE_GRADIENT_COLORS = ['red', 'orange', 'yellow'];
-				var TEMPERATURE_MESSAGES = ['Many news publishers are covering this story.', 'A few other major news coverage outlets are following this story.', 'This story is emerging.'];
-				TEMPERATURE_INDEX = Math.floor(Math.random() * 3);
-				
-				var vibe_story_temperature = document.createElement('div');
-				vibe_story_temperature.style.fontSize = '10px';
-				vibe_story_temperature.style.marginBottom = '-10px'
-				vibe_story_temperature.innerHTML = '<img style="width: 20px; height: 20px; background: -webkit-radial-gradient(' + TEMPERATURE_GRADIENT_COLORS[TEMPERATURE_INDEX] + ', white 75%, white)" src="https://d30y9cdsu7xlg0.cloudfront.net/png/151029-200.png" />' + '<span style="position: relative; top: -7px; left: 3px">' + TEMPERATURE_MESSAGES[TEMPERATURE_INDEX] + '</span>';
-				vibe_story.appendChild(vibe_story_temperature);
-
-				var vibe_substories = document.createElement('div');
-				vibe_substories.style.marginBottom = '40px';
-				var substory_string = '';
-				for(var k = 0; k < 3 - TEMPERATURE_INDEX; k++)	{
-					substory_string += '<div class="cardstream_vibe_story" style="margin: 20px 0px; position: relative;"><div class="vibe_story_img" style="display: inline-block; border-radius: 5px; width: 82px; height: 82px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; background: gray center 25% / cover no-repeat;"></div><div style="padding-left: 10px; display: inline-block; color: rgb(170, 170, 170); width: 70%; vertical-align: top;"><div style="display: inline-block; font-size: 12px;"><img style="height: 12px; position: relative; top: 1px" src="http://l.yimg.com/os/152/2012/04/21/image001-png_162613.png"></div><div style="display: inline-block; font-size: 12px;">&nbsp; &bull; <font style="">' + Math.floor(Math.random() * 8 + 1) + 'h</font></div><div style="font-size: 15px; font-weight: normal; color: rgb(34, 34, 34); -webkit-line-clamp: 3; display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical;">Lorem ipsum dolor amet sil lorem ipsum dolor amet sil</div><div style="font-size: 10px; margin: 5px 0px; color: midnightblue;"></div></div></div>';
+				// TEMPERATURE THING
+				if(false) {
+					var TEMPERATURE_GRADIENT_COLORS = ['red', 'orange', 'yellow'];
+					var TEMPERATURE_MESSAGES = ['Many news publishers are covering this story.', 'A few other major news coverage outlets are following this story.', 'This story is emerging.'];
+					TEMPERATURE_INDEX = Math.floor(Math.random() * 3);
+					
+					var vibe_story_temperature = document.createElement('div');
+					vibe_story_temperature.style.fontSize = '10px';
+					vibe_story_temperature.style.marginBottom = '-10px'
+					vibe_story_temperature.innerHTML = '<img style="width: 20px; height: 20px; background: -webkit-radial-gradient(' + TEMPERATURE_GRADIENT_COLORS[TEMPERATURE_INDEX] + ', white 75%, white)" src="https://d30y9cdsu7xlg0.cloudfront.net/png/151029-200.png" />' + '<span style="position: relative; top: -7px; left: 3px">' + TEMPERATURE_MESSAGES[TEMPERATURE_INDEX] + '</span>';
+					vibe_story.appendChild(vibe_story_temperature);
+		
+					var vibe_substories = document.createElement('div');
+					vibe_substories.style.marginBottom = '40px';
+					var substory_string = '';
+					for(var k = 0; k < 3 - TEMPERATURE_INDEX; k++)	{
+						substory_string += '<div class="cardstream_vibe_story" style="margin: 20px 0px; position: relative;"><div class="vibe_story_img" style="display: inline-block; border-radius: 5px; width: 82px; height: 82px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; background: gray center 25% / cover no-repeat;"></div><div style="padding-left: 10px; display: inline-block; color: rgb(170, 170, 170); width: 70%; vertical-align: top;"><div style="display: inline-block; font-size: 12px;"><img style="height: 12px; position: relative; top: 1px" src="http://l.yimg.com/os/152/2012/04/21/image001-png_162613.png"></div><div style="display: inline-block; font-size: 12px;">&nbsp; &bull; <font style="">' + Math.floor(Math.random() * 8 + 1) + 'h</font></div><div style="font-size: 15px; font-weight: normal; color: rgb(34, 34, 34); -webkit-line-clamp: 3; display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical;">Lorem ipsum dolor amet sil lorem ipsum dolor amet sil</div><div style="font-size: 10px; margin: 5px 0px; color: midnightblue;"></div></div></div>';
+					}
+					vibe_substories.innerHTML = substory_string;
+					vibe_story.appendChild(vibe_substories);
 				}
-				vibe_substories.innerHTML = substory_string;
-				vibe_story.appendChild(vibe_substories);
+
+				// SPECTRUM THING
+				if(true) {					
+					var vibe_story_left_spectrum = document.createElement('div');
+					vibe_story_left_spectrum.style.paddingRight = '50%'
+					vibe_story_left_spectrum.style.fontSize = '10px';
+					vibe_story_left_spectrum.innerHTML = 'bitcoin is a failing business, and this major correction is just the first of a series of pullbacks!';
+					vibe_story.appendChild(vibe_story_left_spectrum);
+
+					var vibe_story_spectrum = document.createElement('div');
+					SPECTRUM_RESOLUTION = 25;
+					for(var i = 0; i < SPECTRUM_RESOLUTION; i++)	{
+						var spectrum_pixel = document.createElement('div');
+						spectrum_pixel.style.display = 'inline-block';
+						spectrum_pixel.style.textAlign = 'center';
+						spectrum_pixel.style.width = (100 / SPECTRUM_RESOLUTION) + '%';
+						spectrum_pixel.style.height = '50px';
+						spectrum_pixel.style.position = 'relative';
+						spectrum_pixel.style.top  = (Math.random() * 25) + 'px';
+						// spectrum_pixel.style.background = '-webkit-linear-gradient(top, white, black ' + ((Math.random() * 100) + '%') + ', white)';
+						spectrum_pixel.innerHTML = '&bull;';
+						
+						vibe_story.appendChild(spectrum_pixel)
+					}
+
+					var vibe_story_right_spectrum = document.createElement('div');
+					vibe_story_right_spectrum.style.paddingLeft = '50%'
+					vibe_story_right_spectrum.style.textAlign = 'right'
+					vibe_story_right_spectrum.style.fontSize = '10px';
+					vibe_story_right_spectrum.style.marginBottom = '50px';
+					vibe_story_right_spectrum.innerHTML = 'the bears are wrong! now\'s the time to buy the dip on bitcoin - growth is right around the corner!';
+					vibe_story.appendChild(vibe_story_right_spectrum);
+		
+				}				
 
 
 			} else {
